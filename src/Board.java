@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
 public class Board {
     //Fen String generator
 
@@ -13,9 +16,6 @@ public class Board {
     };
 
 
-    public void makeMove(String move){
-    //todo hvordan skal brikker rykkes rundt
-    }
 
     //En måde på at tjekke om et træk er lovligt
 
@@ -58,6 +58,47 @@ public class Board {
             }
             System.out.println();
         }
-        System.out.println("    a  b  c d  e f  g  h");
+        System.out.println("    a   b   c   d   e   f   g   h");
+    }
+
+
+    public void makeMove(String move){
+        int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
+        int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;
+        int toChar = Character.getNumericValue(move.charAt(4)) - 10;
+        int toNum = 9 - Character.getNumericValue(move.charAt(5)) - 1;
+
+        System.out.println(fromChar + " " + fromNum + " " + toChar + " " + toNum);
+
+        char piece = board[fromNum][fromChar];
+        board[fromNum][fromChar] = ' ';
+        board[toNum][toChar] = piece;
+    }
+
+    public void gameLoop(){
+        System.out.println("Welcome to Chess");
+        Scanner in = new Scanner(System.in);
+        String move;
+        while(true){
+            drawBoard(board);
+            System.out.println("White turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
+            move = in.nextLine();
+            if(move.equals("exit")){
+                break;
+            }
+            makeMove(move);
+            drawBoard(board);
+            System.out.println("Black turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
+            move = in.nextLine();
+            makeMove(move);
+            if(move.equals("exit")){
+                break;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Board board = new Board();
+        board.gameLoop();
     }
 }
