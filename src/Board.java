@@ -86,6 +86,7 @@ public class Board {
             if(move.equals("exit")){
                 break;
             }
+            //System.out.println("staticEval for White " + new StaticEvaluator().evaluate(board,true));
             makeMove(move);
             drawBoard(board);
             System.out.println("Black turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
@@ -94,6 +95,7 @@ public class Board {
             if(move.equals("exit")){
                 break;
             }
+            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
     }
 
