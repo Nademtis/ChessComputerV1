@@ -116,4 +116,178 @@ public class Computer {
         //todo promotion of pawn
     }
 
+    public void rookMoves(int i, int j, boolean isWhite) {
+        char currentPiece = board[i][j];
+
+        // Rook moves horizontally to the right
+        for (int k = j + 1; k < 8; k++) {
+            char content = board[i][k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i, k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                }
+                break;
+            }
+        }
+
+        // Rook moves horizontally to the left
+        for (int k = j - 1; k >= 0; k--) {
+            char content = board[i][k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i, k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                }
+            }
+        }
+
+        // Rook moves vertically upwards
+        for (int k = i - 1; k >= 0; k--) {
+            char content = board[k][j];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{k, j};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                }
+            }
+        }
+
+        // Rook moves vertically downwards
+        for (int k = i + 1; k < 8; k++) {
+            char content = board[k][j];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{k, j};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                    break;
+                }
+            }
+        }
+    }
 }
