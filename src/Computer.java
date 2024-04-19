@@ -2,6 +2,28 @@ import java.util.ArrayList;
 
 public class Computer {
 
+    public static void main(String[] args) {
+        char[][] tempBoard = {
+                {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
+                {'p', ' ', 'p', 'p', 'p', 'p', 'p', 'p'},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P'},
+                {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+        };
+
+        Computer computer = new Computer(tempBoard);
+
+        computer.generateMoves();
+        //System.out.println(computer.possibleMoves);
+        for (int i = 0; i < computer.possibleMoves.size(); i++) {
+            System.out.println(computer.possibleMoves.get(i));
+        }
+        System.out.println(computer.possibleMoves.size());
+    }
+
     //Generate moves
 
     //Sort moves
@@ -16,7 +38,7 @@ public class Computer {
 
     public ArrayList<MoveType> possibleMoves = new ArrayList<>();
 
-    public void GenerateMoves(){
+    public void generateMoves(){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 switch (board[i][j]){
@@ -65,54 +87,96 @@ public class Computer {
         }
     }
 
-    public void pawnMoves(int i, int j, boolean isWhite){
+    public void pawnMoves(int row, int col, boolean isWhite) {
         //TODO make sure pawn cannot move through another piece
-        if(i == 1 && !isWhite){
+        //TODO split method into black and white, so a method for black and a method for white pawn
+        //TODO maybe instead reverse array.
+        //black pawn starting position to move 2 spaces forward
+        if (row == 1 && !isWhite && board[row+2][col] == ' ') {
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i+2, j};
-            move.piece = board[i][j];
-            move.content = board[i+2][j];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row + 2, col};
+            move.piece = board[row][col];
+            move.content = board[row + 2][col];
             possibleMoves.add(move);
-        } else if(!isWhite && i< 7) {
+        }
+        // black pawn moving 1 space forward
+        if (!isWhite && row < 7  && board[row+1][col] == ' ') {
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i+1, j};
-            move.piece = board[i][j];
-            move.content = board[i+1][j];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row + 1, col};
+            move.piece = board[row][col];
+            move.content = board[row + 1][col];
             possibleMoves.add(move);
-        } else if(i == 6 && isWhite){
+        }
+        // white pawn starting position to move 2 spaces forward
+        if (row == 6 && isWhite  && board[row-2][col] == ' ') {
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i-2, j};
-            move.piece = board[i][j];
-            move.content = board[i-2][j];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 2, col};
+            move.piece = board[row][col];
+            move.content = board[row - 2][col];
             possibleMoves.add(move);
-        } else if(isWhite && i > 0) {
+        }
+        // white pawn moving 1 space forward
+        if (isWhite && row > 0  && board[row-1][col] == ' ') {
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i-1, j};
-            move.piece = board[i][j];
-            move.content = board[i-1][j];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.content = board[row - 1][col];
             possibleMoves.add(move);
         }
 
-        if(!isWhite && board[i+1][j+1] != ' ' && Character.isLowerCase(board[i][j])){
+        // black pawn capturing piece left
+        if(col - 1  < 0){
+
+        } else if(!isWhite && board[row+1][col-1] != ' ' && Character.isLowerCase(board[row][col])){
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i+1, j+1};
-            move.piece = board[i][j];
-            move.content = board[i+1][j+1];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row+1, col+1};
+            move.piece = board[row][col];
+            move.content = board[row+1][col+1];
             possibleMoves.add(move);
         }
-        if(isWhite && board[i+1][j-1] != ' ' && Character.isUpperCase(board[i][j])){
+
+        // black pawn capturing piece right
+        if(col + 1  > 7){
+
+        } else if(!isWhite && board[row+1][col+1] != ' ' && Character.isLowerCase(board[row][col])){
             MoveType move = new MoveType();
-            move.oldSpace = new int[]{i, j};
-            move.newSpace = new int[]{i+1, j-1};
-            move.piece = board[i][j];
-            move.content = board[i+1][j-1];
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row+1, col+1};
+            move.piece = board[row][col];
+            move.content = board[row+1][col+1];
             possibleMoves.add(move);
         }
+
+        // white pawn capturing piece left
+        if(col - 1  < 0){
+
+        } else if(isWhite && board[row-1][col-1] != ' ' && Character.isUpperCase(board[row][col])){
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row+1, col-1};
+            move.piece = board[row][col];
+            move.content = board[row+1][col-1];
+            possibleMoves.add(move);
+        }
+
+        // white pawn capturing piece right
+        if(col + 1  > 7){
+
+        } else if(isWhite && board[row-1][col+1] != ' ' && Character.isUpperCase(board[row][col])){
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row+1, col+1};
+            move.piece = board[row][col];
+            move.content = board[row+1][col+1];
+            possibleMoves.add(move);
+        }
+
+
         //todo promotion of pawn
     }
 
