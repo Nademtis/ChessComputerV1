@@ -91,6 +91,7 @@ public class Computer {
         //TODO make sure pawn cannot move through another piece
         //TODO split method into black and white, so a method for black and a method for white pawn
         //TODO maybe instead reverse array.
+
         //black pawn starting position to move 2 spaces forward
         if (row == 1 && !isWhite && board[row+2][col] == ' ') {
             MoveType move = new MoveType();
@@ -178,6 +179,42 @@ public class Computer {
 
 
         //todo promotion of pawn
+    }
+
+    public void whitePawnMove(int row, int col){
+        // white pawn starting position to move 2 spaces forward
+        if (row == 6 && board[row-2][col] == ' ') {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 2, col};
+            move.piece = board[row][col];
+            move.content = board[row - 2][col];
+            possibleMoves.add(move);
+        }
+        // white pawn moving 1 space forward
+        if (row > 0  && board[row-1][col] == ' ') {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.content = board[row - 1][col];
+            possibleMoves.add(move);
+        }
+
+        whitePawnMoveForwardOne(row - 1, col);
+
+    }
+
+    public void whitePawnMoveForwardOne(int row, int col){
+        // white pawn moving 1 space forward
+        if (row > 0  && board[row][col] == ' ' && row < 7) {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.content = board[row - 1][col];
+            possibleMoves.add(move);
+        }
     }
 
     public void rookMoves(int i, int j, boolean isWhite) {
@@ -354,4 +391,6 @@ public class Computer {
             }
         }
     }
+
+
 }
