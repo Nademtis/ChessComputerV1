@@ -354,4 +354,385 @@ public class Computer {
             }
         }
     }
+
+    public void queenMoves(int i, int j, boolean isWhite) {
+        char currentPiece = board[i][j];
+
+        // Queen moves horizontally to the right
+        for (int k = j + 1; k < 8; k++) {
+            char content = board[i][k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i, k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                }
+                break;
+            }
+        }
+
+        // Queen moves horizontally to the left
+        for (int k = j - 1; k >= 0; k--) {
+            char content = board[i][k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i, k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i, k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves vertically upwards
+        for (int k = i - 1; k >= 0; k--) {
+            char content = board[k][j];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{k, j};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves vertically downwards
+        for (int k = i + 1; k < 8; k++) {
+            char content = board[k][j];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{k, j};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, j};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves diagonally upwards to the right
+        for (int k = 1; i - k >= 0 && j + k < 8; k++) {
+            char content = board[i - k][j + k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i - k, j + k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i - k, j + k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i - k, j + k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves diagonally upwards to the left
+        for (int k = 1; i - k >= 0 && j - k >= 0; k++) {
+            char content = board[i - k][j - k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i - k, j - k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i - k, j - k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i - k, j - k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves diagonally downwards to the right
+        for (int k = 1; i + k < 8 && j + k < 8; k++) {
+            char content = board[i + k][j + k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i + k, j + k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i + k, j + k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i + k, j + k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+
+        // Queen moves diagonally downwards to the left
+        for (int k = 1; i + k < 8 && j - k >= 0; k++) {
+            char content = board[i + k][j - k];
+            if (content == ' ') {
+                // Empty space, add move
+                MoveType move = new MoveType();
+                move.oldSpace = new int[]{i, j};
+                move.newSpace = new int[]{i + k, j - k};
+                move.piece = currentPiece;
+                move.content = content;
+                possibleMoves.add(move);
+            } else {
+                // Opponent's piece, check if capture is possible
+                if (Character.isLowerCase(currentPiece)) {
+                    // Current piece is black
+                    if (Character.isUpperCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i + k, j - k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                    // Stop considering moves in this direction
+                } else {
+                    // Current piece is white
+                    if (Character.isLowerCase(content)) {
+                        // Can capture opponent's piece
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{i + k, j - k};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    public void kingMoves(int i, int j, boolean isWhite) {
+        char currentPiece = board[i][j];
+
+        // King moves one step in all directions
+        for (int k = i - 1; k <= i + 1; k++) {
+            for (int l = j - 1; l <= j + 1; l++) {
+                if (k >= 0 && k < 8 && l >= 0 && l < 8) {
+                    char content = board[k][l];
+                    if (content == ' ') {
+                        // Empty space, add move
+                        MoveType move = new MoveType();
+                        move.oldSpace = new int[]{i, j};
+                        move.newSpace = new int[]{k, l};
+                        move.piece = currentPiece;
+                        move.content = content;
+                        possibleMoves.add(move);
+                    } else {
+                        // Opponent's piece, check if capture is possible
+                        if (Character.isLowerCase(currentPiece)) {
+                            // Current piece is black
+                            if (Character.isUpperCase(content)) {
+                                // Can capture opponent's piece
+                                MoveType move = new MoveType();
+                                move.oldSpace = new int[]{i, j};
+                                move.newSpace = new int[]{k, l};
+                                move.piece = currentPiece;
+                                move.content = content;
+                                possibleMoves.add(move);
+                            }
+                        } else {
+                            // Current piece is white
+                            if (Character.isLowerCase(content)) {
+                                // Can capture opponent's piece
+                                MoveType move = new MoveType();
+                                move.oldSpace = new int[]{i, j};
+                                move.newSpace = new int[]{k, l};
+                                move.piece = currentPiece;
+                                move.content = content;
+                                possibleMoves.add(move);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
 }
