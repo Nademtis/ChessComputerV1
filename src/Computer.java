@@ -4,14 +4,14 @@ public class Computer {
 
     public static void main(String[] args) {
         char[][] tempBoard = {
-                {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-                {'p', ' ', 'p', 'p', 'p', 'p', 'p', 'p'},
+                {'r', 'P', 'b', 'q', 'k', 'b', 'n', 'r'},
+                {'p', ' ', ' ', 'p', 'p', 'p', 'p', 'p'},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', 'p', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', 'P', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {'P', 'P', ' ', 'P', 'P', 'P', 'P', 'P'},
-                {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+                {'P', ' ', ' ', 'P', 'P', 'P', 'P', 'P'},
+                {'R', 'p', 'B', 'Q', 'K', 'B', 'N', 'R'}
         };
 
         Computer computer = new Computer(tempBoard);
@@ -44,11 +44,13 @@ public class Computer {
                 switch (board[i][j]){
                     case 'p':
                         //pawn
-                        pawnMoves(i, j, false);
+                        //pawnMoves(i, j, false);
+                        blackPawnMove(i, j);
                         break;
                     case 'P':
                         //pawn
-                        pawnMoves(i, j, true);
+                        //pawnMoves(i, j, true);
+                        whitePawnMove(i, j);
                         break;
                     case 'r':
                         //rook
@@ -87,11 +89,8 @@ public class Computer {
         }
     }
 
+    //redundant code, can be removed
     public void pawnMoves(int row, int col, boolean isWhite) {
-        //TODO make sure pawn cannot move through another piece
-        //TODO split method into black and white, so a method for black and a method for white pawn
-        //TODO maybe instead reverse array.
-
         //black pawn starting position to move 2 spaces forward
         if (row == 1 && !isWhite && board[row+2][col] == ' ') {
             MoveType move = new MoveType();
@@ -132,7 +131,7 @@ public class Computer {
         // black pawn capturing piece left
         if(col - 1  < 0){
 
-        } else if(!isWhite && board[row+1][col-1] != ' ' && Character.isLowerCase(board[row][col])){
+        } else if(!isWhite && board[row+1][col-1] != ' ' && Character.isUpperCase(board[row+1][col-1])){
             MoveType move = new MoveType();
             move.oldSpace = new int[]{row, col};
             move.newSpace = new int[]{row+1, col+1};
@@ -144,7 +143,7 @@ public class Computer {
         // black pawn capturing piece right
         if(col + 1  > 7){
 
-        } else if(!isWhite && board[row+1][col+1] != ' ' && Character.isLowerCase(board[row][col])){
+        } else if(!isWhite && board[row+1][col+1] != ' ' && Character.isUpperCase(board[row+1][col+1])){
             MoveType move = new MoveType();
             move.oldSpace = new int[]{row, col};
             move.newSpace = new int[]{row+1, col+1};
@@ -156,7 +155,7 @@ public class Computer {
         // white pawn capturing piece left
         if(col - 1  < 0){
 
-        } else if(isWhite && board[row-1][col-1] != ' ' && Character.isUpperCase(board[row][col])){
+        } else if(isWhite && board[row-1][col-1] != ' ' && Character.isLowerCase(board[row-1][col-1])){
             MoveType move = new MoveType();
             move.oldSpace = new int[]{row, col};
             move.newSpace = new int[]{row+1, col-1};
@@ -168,7 +167,7 @@ public class Computer {
         // white pawn capturing piece right
         if(col + 1  > 7){
 
-        } else if(isWhite && board[row-1][col+1] != ' ' && Character.isUpperCase(board[row][col])){
+        } else if(isWhite && board[row-1][col+1] != ' ' && Character.isLowerCase(board[row-1][col+1])){
             MoveType move = new MoveType();
             move.oldSpace = new int[]{row, col};
             move.newSpace = new int[]{row+1, col+1};
@@ -178,44 +177,159 @@ public class Computer {
         }
 
 
-        //todo promotion of pawn
     }
 
+    //region white pawn moves
     public void whitePawnMove(int row, int col){
-        // white pawn starting position to move 2 spaces forward
+        if(row == 0){
+            whitePawnPromotion(row, col);
+        } else {
+
+        if(row > 0 && board[row-1][col] == ' ') {
+            whitePawnMoveForwardOne(row, col);
+        }
+
         if (row == 6 && board[row-2][col] == ' ') {
+            whitePawnMoveForwardTwo(row, col);
+        }
+
+        if(col - 1  < 0){
+        } else if(board[row-1][col-1] != ' ' && Character.isLowerCase(board[row-1][col-1])){
+            whitePawnCaptureLeft(row, col);
+        }
+
+        if(col + 1  > 7){
+        } else if(board[row-1][col+1] != ' ' && Character.isLowerCase(board[row-1][col+1])){
+            whitePawnCaptureRight(row, col);
+        }
+        }
+    }
+
+    public void whitePawnPromotion(int row, int col){
+        // white pawn promotion
+        //todo better way to handle promotion
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row, col};
+        move.piece = board[row][col];
+        move.content = 'Q';
+        possibleMoves.add(move);
+    }
+
+    public void whitePawnMoveForwardOne(int row, int col){
+        // white pawn moving 1 space forward
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.content = board[row - 1][col];
+            possibleMoves.add(move);
+    }
+
+    public void whitePawnMoveForwardTwo(int row, int col){
+        // white pawn moving 2 space forward
             MoveType move = new MoveType();
             move.oldSpace = new int[]{row, col};
             move.newSpace = new int[]{row - 2, col};
             move.piece = board[row][col];
             move.content = board[row - 2][col];
             possibleMoves.add(move);
-        }
-        // white pawn moving 1 space forward
-        if (row > 0  && board[row-1][col] == ' ') {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 1, col};
-            move.piece = board[row][col];
-            move.content = board[row - 1][col];
-            possibleMoves.add(move);
-        }
-
-        whitePawnMoveForwardOne(row - 1, col);
-
     }
 
-    public void whitePawnMoveForwardOne(int row, int col){
-        // white pawn moving 1 space forward
-        if (row > 0  && board[row][col] == ' ' && row < 7) {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 1, col};
-            move.piece = board[row][col];
-            move.content = board[row - 1][col];
-            possibleMoves.add(move);
+    public void whitePawnCaptureLeft(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row+1, col-1};
+        move.piece = board[row][col];
+        move.content = board[row+1][col-1];
+        possibleMoves.add(move);
+    }
+
+    public void whitePawnCaptureRight(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row+1, col+1};
+        move.piece = board[row][col];
+        move.content = board[row+1][col+1];
+        possibleMoves.add(move);
+    }
+    //endregion
+
+    //region black pawn moves
+    public void blackPawnMove(int row, int col){
+        if(row == 7){
+            blackPawnPromotion(row, col);
+        } else {
+
+            if (row < 7 && board[row + 1][col] == ' ') {
+                blackPawnMoveForwardOne(row, col);
+            }
+
+            if (row == 1 && board[row + 2][col] == ' ') {
+                blackPawnMoveForwardTwo(row, col);
+            }
+
+            if (col - 1 < 0) {
+            } else if (board[row + 1][col - 1] != ' ' && Character.isUpperCase(board[row + 1][col - 1])) {
+                blackPawnCaptureLeft(row, col);
+            }
+
+            if (col + 1 > 7) {
+            } else if (board[row + 1][col + 1] != ' ' && Character.isUpperCase(board[row + 1][col + 1])) {
+                blackPawnCaptureRight(row, col);
+            }
         }
     }
+
+    public void blackPawnPromotion(int row, int col){
+        // black pawn promotion
+        //todo better way to handle promotion
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row, col};
+        move.piece = board[row][col];
+        move.content = 'q';
+        possibleMoves.add(move);
+    }
+
+    public void blackPawnMoveForwardOne(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row + 1, col};
+        move.piece = board[row][col];
+        move.content = board[row + 1][col];
+        possibleMoves.add(move);
+    }
+
+    public void blackPawnMoveForwardTwo(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row + 2, col};
+        move.piece = board[row][col];
+        move.content = board[row + 2][col];
+        possibleMoves.add(move);
+    }
+
+    public void blackPawnCaptureLeft(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row+1, col-1};
+        move.piece = board[row][col];
+        move.content = board[row+1][col-1];
+        possibleMoves.add(move);
+    }
+
+    public void blackPawnCaptureRight(int row, int col){
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row+1, col+1};
+        move.piece = board[row][col];
+        move.content = board[row+1][col+1];
+        possibleMoves.add(move);
+    }
+    //endregion
+
+
 
     public void rookMoves(int i, int j, boolean isWhite) {
         char currentPiece = board[i][j];
