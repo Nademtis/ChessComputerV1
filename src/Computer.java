@@ -39,11 +39,12 @@ public class Computer {
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
         System.out.println(bestResult);
         applyMove(bestResult.getBestMove());
+
         return board;
     }
 
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
-        if (depth == 0 ) { // todo || gameIsOver() - king is confirmed fucked
+        if (depth == 0 ) { // todo: || gameIsOver() - king is confirmed fucked
             return new MinMaxResult(new StaticEvaluator().evaluate(board, maximizingPlayer), null);
         }
 
@@ -93,6 +94,7 @@ public class Computer {
             return new MinMaxResult(minEval, bestMove);
         }
     }
+
     private ArrayList<MoveType> generateMoveListWhite() {
         possibleMoves = new ArrayList<>();
         generateMovesForWhite();
@@ -112,18 +114,18 @@ public class Computer {
 
         // Update the board with the move
         board[newSpace[0]][newSpace[1]] = piece;
-        board[oldSpace[0]][oldSpace[1]] = content;
+        board[oldSpace[0]][oldSpace[1]] = ' '; //when piece kill content
     }
 
     private void undoMove(MoveType move) {
-        //undo a move. this is used in minMax to rollback when diving deeper in the tree
+        //undo a move. this is used in minMax to rollback the board when diving deeper in the tree
         int[] oldSpace = move.oldSpace;
         int[] newSpace = move.newSpace;
         char piece = move.piece;
         char content = move.content;
 
         board[oldSpace[0]][oldSpace[1]] = piece;
-        board[newSpace[0]][newSpace[1]] = content;
+        board[newSpace[0]][newSpace[1]] = content; //in order to rollback the board in the algorithm
     }
 
     //Generate moves
@@ -156,10 +158,10 @@ public class Computer {
                         whiteBishopMoves(i, j);
                         break;
                     case 'Q':
-                        // Handle queen moves for white
+                        // whiteQueenMoves
                         break;
                     case 'K':
-                        // Handle king moves for white
+                        // whiteKingMoves
                         break;
                     default:
                         break;
@@ -184,10 +186,10 @@ public class Computer {
                         blackBishopMoves(i, j);
                         break;
                     case 'q':
-                        // Handle queen moves for black
+                        // blackQueenMoves
                         break;
                     case 'k':
-                        // Handle king moves for black
+                        // blackKingMoves
                         break;
                     default:
                         break;

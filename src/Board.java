@@ -102,7 +102,7 @@ public class Board {
 
             System.out.println("Black/computer is thinking... hold on");
             Computer computer = new Computer(board);
-            board = computer.computerMakeMove(6);
+            board = computer.computerMakeMove(7);
             System.out.println("computer is done.");
             drawBoard(board);
             System.out.println("-------------------------------------------");
