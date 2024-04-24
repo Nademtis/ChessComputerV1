@@ -14,6 +14,16 @@ public class Board {
             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
             {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
     };
+    /*char[][] board = {
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+            {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
+    };*/
 
 
 
@@ -88,13 +98,22 @@ public class Board {
             }
             //System.out.println("staticEval for White " + new StaticEvaluator().evaluate(board,true));
             makeMove(move);
+
+
+            System.out.println("Black/computer is thinking... hold on");
+            Computer computer = new Computer(board);
+            board = computer.computerMakeMove(6);
+            System.out.println("computer is done.");
             drawBoard(board);
-            System.out.println("Black turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
-            move = in.nextLine();
-            makeMove(move);
+            System.out.println("-------------------------------------------");
+            //code below is for manually moving black
+            //move = in.nextLine();
+            /*makeMove(move);
             if(move.equals("exit")){
                 break;
-            }
+            }*/
+
+
             //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
     }

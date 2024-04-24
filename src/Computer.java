@@ -27,12 +27,103 @@ public class Computer {
 
         Computer computer = new Computer(tempBoard2);
 
-        computer.generateMoves();
+        //computer.generateMoves();
         //System.out.println(computer.possibleMoves);
         for (int i = 0; i < computer.possibleMoves.size(); i++) {
             System.out.println(computer.possibleMoves.get(i));
         }
         System.out.println(computer.possibleMoves.size());
+    }
+
+    public char [][] computerMakeMove(int depth){
+        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+        System.out.println(bestResult);
+        applyMove(bestResult.getBestMove());
+        return board;
+    }
+
+    private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
+        if (depth == 0 ) { // todo || gameIsOver() - king is confirmed fucked
+            return new MinMaxResult(new StaticEvaluator().evaluate(board, maximizingPlayer), null);
+        }
+
+        ArrayList<MoveType> moveList;
+        if (maximizingPlayer){ //if white
+            moveList = new ArrayList<>(generateMoveListWhite());
+
+        }else { //if black
+            moveList = new ArrayList<>(generateMoveListBlack());
+        }
+
+        MoveType bestMove = null;
+
+        if (maximizingPlayer) {
+            int maxEval = Integer.MIN_VALUE;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimax(depth - 1, alpha, beta, false).getEvaluation();
+                undoMove(move);
+
+                if (eval > maxEval) {
+                    maxEval = eval;
+                    bestMove = move;
+                }
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) {
+                    break; // beta cutoff
+                }
+            }
+            return new MinMaxResult(maxEval, bestMove);
+        } else {
+            int minEval = Integer.MAX_VALUE;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimax(depth - 1, alpha, beta, true).getEvaluation();
+                undoMove(move);
+
+                if (eval < minEval) {
+                    minEval = eval;
+                    bestMove = move;
+                }
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
+            }
+            return new MinMaxResult(minEval, bestMove);
+        }
+    }
+    private ArrayList<MoveType> generateMoveListWhite() {
+        possibleMoves = new ArrayList<>();
+        generateMovesForWhite();
+        return possibleMoves;
+    }
+    private ArrayList<MoveType> generateMoveListBlack() {
+        possibleMoves = new ArrayList<>();
+        generateMovesForBlack();
+        return possibleMoves;
+    }
+    private void applyMove(MoveType move) {
+        //apply a move. this is used in minMax to explore the tree in minmax
+        int[] oldSpace = move.oldSpace;
+        int[] newSpace = move.newSpace;
+        char piece = move.piece;
+        char content = move.content;
+
+        // Update the board with the move
+        board[newSpace[0]][newSpace[1]] = piece;
+        board[oldSpace[0]][oldSpace[1]] = content;
+    }
+
+    private void undoMove(MoveType move) {
+        //undo a move. this is used in minMax to rollback when diving deeper in the tree
+        int[] oldSpace = move.oldSpace;
+        int[] newSpace = move.newSpace;
+        char piece = move.piece;
+        char content = move.content;
+
+        board[oldSpace[0]][oldSpace[1]] = piece;
+        board[newSpace[0]][newSpace[1]] = content;
     }
 
     //Generate moves
@@ -48,8 +139,63 @@ public class Computer {
     public char[][] board;
 
     public ArrayList<MoveType> possibleMoves = new ArrayList<>();
-
-    public void generateMoves(){
+    public void generateMovesForWhite() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                switch (board[i][j]) {
+                    case 'P':
+                        whitePawnMove(i, j);
+                        break;
+                    case 'R':
+                        whiteRookMoves(i, j);
+                        break;
+                    case 'N':
+                        whiteKnightMoves(i, j);
+                        break;
+                    case 'B':
+                        whiteBishopMoves(i, j);
+                        break;
+                    case 'Q':
+                        // Handle queen moves for white
+                        break;
+                    case 'K':
+                        // Handle king moves for white
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    public void generateMovesForBlack() {
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                switch (board[i][j]) {
+                    case 'p':
+                        blackPawnMove(i, j);
+                        break;
+                    case 'r':
+                        blackRookMoves(i, j);
+                        break;
+                    case 'n':
+                        blackKnightMoves(i, j);
+                        break;
+                    case 'b':
+                        blackBishopMoves(i, j);
+                        break;
+                    case 'q':
+                        // Handle queen moves for black
+                        break;
+                    case 'k':
+                        // Handle king moves for black
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+    }
+    /*public void generateMoves(){
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 switch (board[i][j]){
@@ -102,7 +248,7 @@ public class Computer {
                 }
             }
         }
-    }
+    }*/
 
     //redundant code, can be removed
     public void pawnMoves(int row, int col, boolean isWhite) {
