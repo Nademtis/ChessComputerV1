@@ -162,7 +162,6 @@ public class StaticEvaluator {
             {-50, -40, -30, -30, -30, -30, -40, -50},
     };
 
-    // Implement piece square tables for bishops, rooks, queens, and kings for black pieces here
     private static final int[][] bishopTableBlack = {
             {-20, -10, -10, -10, -10, -10, -10, -20},
             {-10, 0, 0, 0, 0, 0, 0, -10},
