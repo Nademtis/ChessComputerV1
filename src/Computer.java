@@ -43,6 +43,7 @@ public class Computer {
         return board;
     }
 
+    //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         if (depth == 0 ) { // todo: || gameIsOver() - king is confirmed fucked
             return new MinMaxResult(new StaticEvaluator().evaluate(board, maximizingPlayer), null);
@@ -127,6 +128,7 @@ public class Computer {
         board[oldSpace[0]][oldSpace[1]] = piece;
         board[newSpace[0]][newSpace[1]] = content; //in order to rollback the board in the algorithm
     }
+    //endregion
 
     //Generate moves
 
@@ -344,6 +346,10 @@ public class Computer {
 
     //region white pawn moves
     public void whitePawnMove(int row, int col){
+        //TODO add en passant
+        //TODO fix error when depth > 7
+        //TODO better promotion
+        //TODO make pawnMoveForwardTwo not be able to move if there is a piece in front of it
         if(row == 0){
             whitePawnPromotion(row, col);
         } else {
