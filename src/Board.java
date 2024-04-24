@@ -98,14 +98,15 @@ public class Board {
             }
             //System.out.println("staticEval for White " + new StaticEvaluator().evaluate(board,true));
             makeMove(move);
-
+            drawBoard(board);
+            System.out.println("-------------------------------------------");
 
             System.out.println("Black/computer is thinking... hold on");
             Computer computer = new Computer(board);
             board = computer.computerMakeMove(7);
             System.out.println("computer is done.");
-            drawBoard(board);
-            System.out.println("-------------------------------------------");
+
+
             //code below is for manually moving black
             //move = in.nextLine();
             /*makeMove(move);
