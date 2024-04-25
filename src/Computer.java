@@ -408,18 +408,18 @@ public class Computer {
     public void whitePawnCaptureLeft(int row, int col){
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col-1};
+        move.newSpace = new int[]{row-1, col-1};
         move.piece = board[row][col];
-        move.content = board[row+1][col-1];
+        move.content = board[row-1][col-1];
         possibleMoves.add(move);
     }
 
     public void whitePawnCaptureRight(int row, int col){
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col+1};
+        move.newSpace = new int[]{row-1, col+1};
         move.piece = board[row][col];
-        move.content = board[row+1][col+1];
+        move.content = board[row-1][col+1];
         possibleMoves.add(move);
     }
     //endregion
