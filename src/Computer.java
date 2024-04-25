@@ -15,7 +15,7 @@ public class Computer {
         };
 
         char[][] tempBoard2 = {
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -1675,7 +1675,7 @@ public class Computer {
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row + 1, col};
         move.piece = board[row][col];
-        move.content = board[row - 1][col];
+        move.content = board[row + 1][col];
         possibleMoves.add(move);
     }
 
