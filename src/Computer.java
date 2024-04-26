@@ -578,7 +578,8 @@ public class Computer {
         move.content = board[row + 2][col + 1];
         possibleMoves.add(move);
     }
-    //endregion''
+    //endregion
+
 
     //region White Bishop moves
     public void whiteBishopMoves(int row, int col) {
@@ -814,6 +815,7 @@ public class Computer {
     }
     //endregion
 
+
     //region White Rook moves
     public void whiteRookMoves(int row, int col) {
         whiteRookMoveRight(row, col);
@@ -1031,6 +1033,7 @@ public class Computer {
         }
     }
     //endregion
+
 
     //region Black Queen moves
     public void blackQueenMoves(int row, int col) {
