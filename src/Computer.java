@@ -36,7 +36,7 @@ public class Computer {
         System.out.println(computer.possibleMoves.size());
     }
 
-    public char [][] computerMakeMove(int depth){
+    public char[][] computerMakeMove(int depth) {
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
         System.out.println(bestResult);
         applyMove(bestResult.getBestMove());
@@ -46,15 +46,15 @@ public class Computer {
 
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
-        if (depth == 0 ) { // todo: || gameIsOver() - king is confirmed fucked
+        if (depth == 0) { // todo: || gameIsOver() - king is confirmed fucked
             return new MinMaxResult(new StaticEvaluator().evaluate(board, maximizingPlayer), null);
         }
 
         ArrayList<MoveType> moveList;
-        if (maximizingPlayer){ //if white
+        if (maximizingPlayer) { //if white
             moveList = new ArrayList<>(generateMoveListWhite());
 
-        }else { //if black
+        } else { //if black
             moveList = new ArrayList<>(generateMoveListBlack());
         }
 
@@ -102,11 +102,13 @@ public class Computer {
         generateMovesForWhite();
         return possibleMoves;
     }
+
     private ArrayList<MoveType> generateMoveListBlack() {
         possibleMoves = new ArrayList<>();
         generateMovesForBlack();
         return possibleMoves;
     }
+
     private void applyMove(MoveType move) {
         //apply a move. this is used in minMax to explore the tree in minmax
         int[] oldSpace = move.oldSpace;
@@ -137,13 +139,14 @@ public class Computer {
 
     //Only generate legal moves
 
-    public Computer(char[][] board){
+    public Computer(char[][] board) {
         this.board = board;
     }
 
     public char[][] board;
 
     public ArrayList<MoveType> possibleMoves = new ArrayList<>();
+
     public void generateMovesForWhite() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -174,6 +177,7 @@ public class Computer {
             }
         }
     }
+
     public void generateMovesForBlack() {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -204,182 +208,36 @@ public class Computer {
             }
         }
     }
-    /*public void generateMoves(){
-        for (int i = 0; i < board.length; i++) {
-            for (int j = 0; j < board[i].length; j++) {
-                switch (board[i][j]){
-                    case 'p':
-                        //pawn
-                        blackPawnMove(i, j);
-                        break;
-                    case 'P':
-                        //pawn
-                        whitePawnMove(i, j);
-                        break;
-                    case 'r':
-                        //rook
-                        blackRookMoves(i, j);
-                        break;
-                    case 'R':
-                        //rook
-                        whiteRookMoves(i, j);
-                        break;
-                    case 'n':
-                        //knight
-                        blackKnightMoves(i, j);
-                        break;
-                    case 'N':
-                        //knight
-                        whiteKnightMoves(i, j);
-                        break;
-                    case 'b':
-                        //bishop
-                        blackBishopMoves(i, j);
-                        break;
-                    case 'B':
-                        //bishop
-                        whiteBishopMoves(i, j);
-                        break;
-                    case 'q':
-                        //queen
-                        break;
-                    case 'Q':
-                        //queen
-                        break;
-                    case 'k':
-                        //king
-                        break;
-                    case 'K':
-                        //king
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }*/
-
-    //redundant code, can be removed
-    public void pawnMoves(int row, int col, boolean isWhite) {
-        //black pawn starting position to move 2 spaces forward
-        if (row == 1 && !isWhite && board[row+2][col] == ' ') {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row + 2, col};
-            move.piece = board[row][col];
-            move.content = board[row + 2][col];
-            possibleMoves.add(move);
-        }
-        // black pawn moving 1 space forward
-        if (!isWhite && row < 7  && board[row+1][col] == ' ') {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row + 1, col};
-            move.piece = board[row][col];
-            move.content = board[row + 1][col];
-            possibleMoves.add(move);
-        }
-        // white pawn starting position to move 2 spaces forward
-        if (row == 6 && isWhite  && board[row-2][col] == ' ') {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 2, col};
-            move.piece = board[row][col];
-            move.content = board[row - 2][col];
-            possibleMoves.add(move);
-        }
-        // white pawn moving 1 space forward
-        if (isWhite && row > 0  && board[row-1][col] == ' ') {
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 1, col};
-            move.piece = board[row][col];
-            move.content = board[row - 1][col];
-            possibleMoves.add(move);
-        }
-
-        // black pawn capturing piece left
-        if(col - 1  < 0){
-
-        } else if(!isWhite && board[row+1][col-1] != ' ' && Character.isUpperCase(board[row+1][col-1])){
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row+1, col+1};
-            move.piece = board[row][col];
-            move.content = board[row+1][col+1];
-            possibleMoves.add(move);
-        }
-
-        // black pawn capturing piece right
-        if(col + 1  > 7){
-
-        } else if(!isWhite && board[row+1][col+1] != ' ' && Character.isUpperCase(board[row+1][col+1])){
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row+1, col+1};
-            move.piece = board[row][col];
-            move.content = board[row+1][col+1];
-            possibleMoves.add(move);
-        }
-
-        // white pawn capturing piece left
-        if(col - 1  < 0){
-
-        } else if(isWhite && board[row-1][col-1] != ' ' && Character.isLowerCase(board[row-1][col-1])){
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row+1, col-1};
-            move.piece = board[row][col];
-            move.content = board[row+1][col-1];
-            possibleMoves.add(move);
-        }
-
-        // white pawn capturing piece right
-        if(col + 1  > 7){
-
-        } else if(isWhite && board[row-1][col+1] != ' ' && Character.isLowerCase(board[row-1][col+1])){
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row+1, col+1};
-            move.piece = board[row][col];
-            move.content = board[row+1][col+1];
-            possibleMoves.add(move);
-        }
-
-
-    }
 
     //region white pawn moves
-    public void whitePawnMove(int row, int col){
+    public void whitePawnMove(int row, int col) {
         //TODO add en passant
-        //fix error when depth > 7 fixed
         //TODO better promotion
-        //make pawnMoveForwardTwo not be able to move if there is a piece in front of it fixed
-        if(row == 0){
+        if (row == 0) {
             whitePawnPromotion(row, col);
         } else {
 
-        if(row > 0 && board[row-1][col] == ' ') {
-            whitePawnMoveForwardOne(row, col);
-        }
+            if (row > 0 && board[row - 1][col] == ' ') {
+                whitePawnMoveForwardOne(row, col);
+            }
 
-        if (row == 6 && board[row-2][col] == ' ' && board[row-1][col] == ' '){
-            whitePawnMoveForwardTwo(row, col);
-        }
+            if (row == 6 && board[row - 2][col] == ' ' && board[row - 1][col] == ' ') {
+                whitePawnMoveForwardTwo(row, col);
+            }
 
-        if(col - 1  < 0){
-        } else if(board[row-1][col-1] != ' ' && Character.isLowerCase(board[row-1][col-1])){
-            whitePawnCaptureLeft(row, col);
-        }
+            if (col - 1 < 0) {
+            } else if (board[row - 1][col - 1] != ' ' && Character.isLowerCase(board[row - 1][col - 1])) {
+                whitePawnCaptureLeft(row, col);
+            }
 
-        if(col + 1  > 7){
-        } else if(board[row-1][col+1] != ' ' && Character.isLowerCase(board[row-1][col+1])){
-            whitePawnCaptureRight(row, col);
-        }
+            if (col + 1 > 7) {
+            } else if (board[row - 1][col + 1] != ' ' && Character.isLowerCase(board[row - 1][col + 1])) {
+                whitePawnCaptureRight(row, col);
+            }
         }
     }
 
-    public void whitePawnPromotion(int row, int col){
+    public void whitePawnPromotion(int row, int col) {
         // white pawn promotion
         //todo better way to handle promotion
         MoveType move = new MoveType();
@@ -390,48 +248,48 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void whitePawnMoveForwardOne(int row, int col){
+    public void whitePawnMoveForwardOne(int row, int col) {
         // white pawn moving 1 space forward
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 1, col};
-            move.piece = board[row][col];
-            move.content = board[row - 1][col];
-            possibleMoves.add(move);
-    }
-
-    public void whitePawnMoveForwardTwo(int row, int col){
-        // white pawn moving 2 space forward
-            MoveType move = new MoveType();
-            move.oldSpace = new int[]{row, col};
-            move.newSpace = new int[]{row - 2, col};
-            move.piece = board[row][col];
-            move.content = board[row - 2][col];
-            possibleMoves.add(move);
-    }
-
-    public void whitePawnCaptureLeft(int row, int col){
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col-1};
+        move.newSpace = new int[]{row - 1, col};
         move.piece = board[row][col];
-        move.content = board[row-1][col-1];
+        move.content = board[row - 1][col];
         possibleMoves.add(move);
     }
 
-    public void whitePawnCaptureRight(int row, int col){
+    public void whitePawnMoveForwardTwo(int row, int col) {
+        // white pawn moving 2 space forward
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col+1};
+        move.newSpace = new int[]{row - 2, col};
         move.piece = board[row][col];
-        move.content = board[row-1][col+1];
+        move.content = board[row - 2][col];
+        possibleMoves.add(move);
+    }
+
+    public void whitePawnCaptureLeft(int row, int col) {
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row - 1, col - 1};
+        move.piece = board[row][col];
+        move.content = board[row - 1][col - 1];
+        possibleMoves.add(move);
+    }
+
+    public void whitePawnCaptureRight(int row, int col) {
+        MoveType move = new MoveType();
+        move.oldSpace = new int[]{row, col};
+        move.newSpace = new int[]{row - 1, col + 1};
+        move.piece = board[row][col];
+        move.content = board[row - 1][col + 1];
         possibleMoves.add(move);
     }
     //endregion
 
     //region black pawn moves
-    public void blackPawnMove(int row, int col){
-        if(row == 7){
+    public void blackPawnMove(int row, int col) {
+        if (row == 7) {
             blackPawnPromotion(row, col);
         } else {
 
@@ -439,7 +297,7 @@ public class Computer {
                 blackPawnMoveForwardOne(row, col);
             }
 
-            if (row == 1 && board[row + 2][col] == ' ' && board[row+1][col] == ' ') {
+            if (row == 1 && board[row + 2][col] == ' ' && board[row + 1][col] == ' ') {
                 blackPawnMoveForwardTwo(row, col);
             }
 
@@ -455,7 +313,7 @@ public class Computer {
         }
     }
 
-    public void blackPawnPromotion(int row, int col){
+    public void blackPawnPromotion(int row, int col) {
         // black pawn promotion
         //todo better way to handle promotion
         MoveType move = new MoveType();
@@ -466,7 +324,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackPawnMoveForwardOne(int row, int col){
+    public void blackPawnMoveForwardOne(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row + 1, col};
@@ -475,7 +333,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackPawnMoveForwardTwo(int row, int col){
+    public void blackPawnMoveForwardTwo(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row + 2, col};
@@ -484,264 +342,264 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackPawnCaptureLeft(int row, int col){
+    public void blackPawnCaptureLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col-1};
+        move.newSpace = new int[]{row + 1, col - 1};
         move.piece = board[row][col];
-        move.content = board[row+1][col-1];
+        move.content = board[row + 1][col - 1];
         possibleMoves.add(move);
     }
 
-    public void blackPawnCaptureRight(int row, int col){
+    public void blackPawnCaptureRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col+1};
+        move.newSpace = new int[]{row + 1, col + 1};
         move.piece = board[row][col];
-        move.content = board[row+1][col+1];
+        move.content = board[row + 1][col + 1];
         possibleMoves.add(move);
     }
     //endregion
 
 
     //region white knight moves
-    public void whiteKnightMoves(int row, int col){
+    public void whiteKnightMoves(int row, int col) {
         // white knight moves
-        if(row - 2 >= 0 && col - 1 >= 0 && (board[row-2][col-1] == ' ' || Character.isLowerCase(board[row-2][col-1]))){
+        if (row - 2 >= 0 && col - 1 >= 0 && (board[row - 2][col - 1] == ' ' || Character.isLowerCase(board[row - 2][col - 1]))) {
             whiteKnightMoveForwardLeft(row, col);
         }
 
-        if(row - 2 >= 0 && col + 1 < 8 && (board[row-2][col+1] == ' ' || Character.isLowerCase(board[row-2][col+1]))){
+        if (row - 2 >= 0 && col + 1 < 8 && (board[row - 2][col + 1] == ' ' || Character.isLowerCase(board[row - 2][col + 1]))) {
             whiteKnightMoveForwardRight(row, col);
         }
 
-        if(row - 1 >= 0 && col - 2 >= 0 && (board[row-1][col-2] == ' ' || Character.isLowerCase(board[row-1][col-2]))){
+        if (row - 1 >= 0 && col - 2 >= 0 && (board[row - 1][col - 2] == ' ' || Character.isLowerCase(board[row - 1][col - 2]))) {
             whiteKnightMoveLeftForward(row, col);
         }
 
-        if(row - 1 >= 0 && col + 2 < 8 && (board[row-1][col+2] == ' ' || Character.isLowerCase(board[row-1][col+2]))){
+        if (row - 1 >= 0 && col + 2 < 8 && (board[row - 1][col + 2] == ' ' || Character.isLowerCase(board[row - 1][col + 2]))) {
             whiteKnightMoveRightForward(row, col);
         }
 
-        if(row + 1 < 8 && col - 2 >= 0 && (board[row+1][col-2] == ' ' || Character.isLowerCase(board[row+1][col-2]))){
+        if (row + 1 < 8 && col - 2 >= 0 && (board[row + 1][col - 2] == ' ' || Character.isLowerCase(board[row + 1][col - 2]))) {
             whiteKnightMoveLeftBack(row, col);
         }
 
-        if(row + 1 < 8 && col + 2 < 8 && (board[row+1][col+2] == ' ' || Character.isLowerCase(board[row+1][col+2]))){
+        if (row + 1 < 8 && col + 2 < 8 && (board[row + 1][col + 2] == ' ' || Character.isLowerCase(board[row + 1][col + 2]))) {
             whiteKnightMoveRightBack(row, col);
         }
 
-        if(row + 2 < 8 && col - 1 >= 0 && (board[row+2][col-1] == ' ' || Character.isLowerCase(board[row+2][col-1]))){
+        if (row + 2 < 8 && col - 1 >= 0 && (board[row + 2][col - 1] == ' ' || Character.isLowerCase(board[row + 2][col - 1]))) {
             whiteKnightMoveBackLeft(row, col);
         }
 
-        if(row + 2 < 8 && col + 1 < 8 && (board[row+2][col+1] == ' ' || Character.isLowerCase(board[row+2][col+1]))){
+        if (row + 2 < 8 && col + 1 < 8 && (board[row + 2][col + 1] == ' ' || Character.isLowerCase(board[row + 2][col + 1]))) {
             whiteKnightMoveBackRight(row, col);
         }
     }
 
-    public void whiteKnightMoveForwardLeft(int row, int col){
+    public void whiteKnightMoveForwardLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-2, col-1};
+        move.newSpace = new int[]{row - 2, col - 1};
         move.piece = board[row][col];
-        move.content = board[row-2][col-1];
+        move.content = board[row - 2][col - 1];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveForwardRight(int row, int col){
+    public void whiteKnightMoveForwardRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-2, col+1};
+        move.newSpace = new int[]{row - 2, col + 1};
         move.piece = board[row][col];
-        move.content = board[row-2][col+1];
+        move.content = board[row - 2][col + 1];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveLeftForward(int row, int col){
+    public void whiteKnightMoveLeftForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col-2};
+        move.newSpace = new int[]{row - 1, col - 2};
         move.piece = board[row][col];
-        move.content = board[row-1][col-2];
+        move.content = board[row - 1][col - 2];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveRightForward(int row, int col){
+    public void whiteKnightMoveRightForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col+2};
+        move.newSpace = new int[]{row - 1, col + 2};
         move.piece = board[row][col];
-        move.content = board[row-1][col+2];
+        move.content = board[row - 1][col + 2];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveLeftBack(int row, int col){
+    public void whiteKnightMoveLeftBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col-2};
+        move.newSpace = new int[]{row + 1, col - 2};
         move.piece = board[row][col];
-        move.content = board[row+1][col-2];
+        move.content = board[row + 1][col - 2];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveRightBack(int row, int col){
+    public void whiteKnightMoveRightBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col+2};
+        move.newSpace = new int[]{row + 1, col + 2};
         move.piece = board[row][col];
-        move.content = board[row+1][col+2];
+        move.content = board[row + 1][col + 2];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveBackLeft(int row, int col){
+    public void whiteKnightMoveBackLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+2, col-1};
+        move.newSpace = new int[]{row + 2, col - 1};
         move.piece = board[row][col];
-        move.content = board[row+2][col-1];
+        move.content = board[row + 2][col - 1];
         possibleMoves.add(move);
     }
 
-    public void whiteKnightMoveBackRight(int row, int col){
+    public void whiteKnightMoveBackRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+2, col+1};
+        move.newSpace = new int[]{row + 2, col + 1};
         move.piece = board[row][col];
-        move.content = board[row+2][col+1];
+        move.content = board[row + 2][col + 1];
         possibleMoves.add(move);
     }
     //endregion
 
     //region Black knight moves
-    public void blackKnightMoves(int row, int col){
+    public void blackKnightMoves(int row, int col) {
         // black knight moves
-        if(row - 2 >= 0 && col - 1 >= 0 && (board[row-2][col-1] == ' ' || Character.isUpperCase(board[row-2][col-1]))){
+        if (row - 2 >= 0 && col - 1 >= 0 && (board[row - 2][col - 1] == ' ' || Character.isUpperCase(board[row - 2][col - 1]))) {
             blackKnightMoveForwardLeft(row, col);
         }
 
-        if(row - 2 >= 0 && col + 1 < 8 && (board[row-2][col+1] == ' ' || Character.isUpperCase(board[row-2][col+1]))){
+        if (row - 2 >= 0 && col + 1 < 8 && (board[row - 2][col + 1] == ' ' || Character.isUpperCase(board[row - 2][col + 1]))) {
             blackKnightMoveForwardRight(row, col);
         }
 
-        if(row - 1 >= 0 && col - 2 >= 0 && (board[row-1][col-2] == ' ' || Character.isUpperCase(board[row-1][col-2]))){
+        if (row - 1 >= 0 && col - 2 >= 0 && (board[row - 1][col - 2] == ' ' || Character.isUpperCase(board[row - 1][col - 2]))) {
             blackKnightMoveLeftForward(row, col);
         }
 
-        if(row - 1 >= 0 && col + 2 < 8 && (board[row-1][col+2] == ' ' || Character.isUpperCase(board[row-1][col+2]))){
+        if (row - 1 >= 0 && col + 2 < 8 && (board[row - 1][col + 2] == ' ' || Character.isUpperCase(board[row - 1][col + 2]))) {
             blackKnightMoveRightForward(row, col);
         }
 
-        if(row + 1 < 8 && col - 2 >= 0 && (board[row+1][col-2] == ' ' || Character.isUpperCase(board[row+1][col-2]))){
+        if (row + 1 < 8 && col - 2 >= 0 && (board[row + 1][col - 2] == ' ' || Character.isUpperCase(board[row + 1][col - 2]))) {
             blackKnightMoveLeftBack(row, col);
         }
 
-        if(row + 1 < 8 && col + 2 < 8 && (board[row+1][col+2] == ' ' || Character.isUpperCase(board[row+1][col+2]))){
+        if (row + 1 < 8 && col + 2 < 8 && (board[row + 1][col + 2] == ' ' || Character.isUpperCase(board[row + 1][col + 2]))) {
             blackKnightMoveRightBack(row, col);
         }
 
-        if(row + 2 < 8 && col - 1 >= 0 && (board[row+2][col-1] == ' ' || Character.isUpperCase(board[row+2][col-1]))){
+        if (row + 2 < 8 && col - 1 >= 0 && (board[row + 2][col - 1] == ' ' || Character.isUpperCase(board[row + 2][col - 1]))) {
             blackKnightMoveBackLeft(row, col);
         }
 
-        if(row + 2 < 8 && col + 1 < 8 && (board[row+2][col+1] == ' ' || Character.isUpperCase(board[row+2][col+1]))){
+        if (row + 2 < 8 && col + 1 < 8 && (board[row + 2][col + 1] == ' ' || Character.isUpperCase(board[row + 2][col + 1]))) {
             blackKnightMoveBackRight(row, col);
         }
     }
 
-    public void blackKnightMoveForwardLeft(int row, int col){
+    public void blackKnightMoveForwardLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-2, col-1};
+        move.newSpace = new int[]{row - 2, col - 1};
         move.piece = board[row][col];
-        move.content = board[row-2][col-1];
+        move.content = board[row - 2][col - 1];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveForwardRight(int row, int col){
+    public void blackKnightMoveForwardRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-2, col+1};
+        move.newSpace = new int[]{row - 2, col + 1};
         move.piece = board[row][col];
-        move.content = board[row-2][col+1];
+        move.content = board[row - 2][col + 1];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveLeftForward(int row, int col){
+    public void blackKnightMoveLeftForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col-2};
+        move.newSpace = new int[]{row - 1, col - 2};
         move.piece = board[row][col];
-        move.content = board[row-1][col-2];
+        move.content = board[row - 1][col - 2];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveRightForward(int row, int col){
+    public void blackKnightMoveRightForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row-1, col+2};
+        move.newSpace = new int[]{row - 1, col + 2};
         move.piece = board[row][col];
-        move.content = board[row-1][col+2];
+        move.content = board[row - 1][col + 2];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveLeftBack(int row, int col){
+    public void blackKnightMoveLeftBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col-2};
+        move.newSpace = new int[]{row + 1, col - 2};
         move.piece = board[row][col];
-        move.content = board[row+1][col-2];
+        move.content = board[row + 1][col - 2];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveRightBack(int row, int col){
+    public void blackKnightMoveRightBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+1, col+2};
+        move.newSpace = new int[]{row + 1, col + 2};
         move.piece = board[row][col];
-        move.content = board[row+1][col+2];
+        move.content = board[row + 1][col + 2];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveBackLeft(int row, int col){
+    public void blackKnightMoveBackLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+2, col-1};
+        move.newSpace = new int[]{row + 2, col - 1};
         move.piece = board[row][col];
-        move.content = board[row+2][col-1];
+        move.content = board[row + 2][col - 1];
         possibleMoves.add(move);
     }
 
-    public void blackKnightMoveBackRight(int row, int col){
+    public void blackKnightMoveBackRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row+2, col+1};
+        move.newSpace = new int[]{row + 2, col + 1};
         move.piece = board[row][col];
-        move.content = board[row+2][col+1];
+        move.content = board[row + 2][col + 1];
         possibleMoves.add(move);
     }
     //endregion''
 
     //region White Bishop moves
-    public void whiteBishopMoves(int row, int col){
+    public void whiteBishopMoves(int row, int col) {
         whiteBishopLeftDiagonalForward(row, col);
         whiteBishopRightDiagonalForward(row, col);
         whiteBishopLeftDiagonalBack(row, col);
         whiteBishopRightDiagonalBack(row, col);
     }
 
-    public void whiteBishopLeftDiagonalBack(int row, int col){
+    public void whiteBishopLeftDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col - 1;
-        while(i < 8 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i < 8 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -757,18 +615,18 @@ public class Computer {
         }
     }
 
-    public void whiteBishopRightDiagonalBack(int row, int col){
+    public void whiteBishopRightDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col + 1;
-        while(i < 8 && j < 8){
-            if(board[i][j] == ' '){
+        while (i < 8 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -784,18 +642,18 @@ public class Computer {
         }
     }
 
-    public void whiteBishopLeftDiagonalForward(int row, int col){
+    public void whiteBishopLeftDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col - 1;
-        while(i >= 0 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -811,18 +669,18 @@ public class Computer {
         }
     }
 
-    public void whiteBishopRightDiagonalForward(int row, int col){
+    public void whiteBishopRightDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col + 1;
-        while(i >= 0 && j < 8){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -840,25 +698,25 @@ public class Computer {
     //endregion
 
     //region Black Bishop moves
-    public void blackBishopMoves(int row, int col){
+    public void blackBishopMoves(int row, int col) {
         blackBishopLeftDiagonalForward(row, col);
         blackBishopRightDiagonalForward(row, col);
         blackBishopLeftDiagonalBack(row, col);
         blackBishopRightDiagonalBack(row, col);
     }
 
-    public void blackBishopLeftDiagonalBack(int row, int col){
+    public void blackBishopLeftDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col - 1;
-        while(i < 8 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i < 8 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -874,18 +732,18 @@ public class Computer {
         }
     }
 
-    public void blackBishopRightDiagonalBack(int row, int col){
+    public void blackBishopRightDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col + 1;
-        while(i < 8 && j < 8){
-            if(board[i][j] == ' '){
+        while (i < 8 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -901,18 +759,18 @@ public class Computer {
         }
     }
 
-    public void blackBishopLeftDiagonalForward(int row, int col){
+    public void blackBishopLeftDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col - 1;
-        while(i >= 0 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -928,18 +786,18 @@ public class Computer {
         }
     }
 
-    public void blackBishopRightDiagonalForward(int row, int col){
+    public void blackBishopRightDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col + 1;
-        while(i >= 0 && j < 8){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -957,24 +815,24 @@ public class Computer {
     //endregion
 
     //region White Rook moves
-    public void whiteRookMoves(int row, int col){
+    public void whiteRookMoves(int row, int col) {
         whiteRookMoveRight(row, col);
         whiteRookMoveLeft(row, col);
         whiteRookMoveForward(row, col);
         whiteRookMoveBack(row, col);
     }
 
-    public void whiteRookMoveRight(int row, int col){
+    public void whiteRookMoveRight(int row, int col) {
         int i = col + 1;
-        while(i < 8){
-            if(board[row][i] == ' '){
+        while (i < 8) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[row][i])){
+            } else if (Character.isLowerCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -989,17 +847,17 @@ public class Computer {
         }
     }
 
-    public void whiteRookMoveLeft(int row, int col){
+    public void whiteRookMoveLeft(int row, int col) {
         int i = col - 1;
-        while(i >= 0){
-            if(board[row][i] == ' '){
+        while (i >= 0) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[row][i])){
+            } else if (Character.isLowerCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1014,17 +872,17 @@ public class Computer {
         }
     }
 
-    public void whiteRookMoveForward(int row, int col){
+    public void whiteRookMoveForward(int row, int col) {
         int i = row - 1;
-        while(i >= 0){
-            if(board[i][col] == ' '){
+        while (i >= 0) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][col])){
+            } else if (Character.isLowerCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1039,17 +897,17 @@ public class Computer {
         }
     }
 
-    public void whiteRookMoveBack(int row, int col){
+    public void whiteRookMoveBack(int row, int col) {
         int i = row + 1;
-        while(i < 8){
-            if(board[i][col] == ' '){
+        while (i < 8) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][col])){
+            } else if (Character.isLowerCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1066,24 +924,24 @@ public class Computer {
     //endregion
 
     //region Black Rook moves
-    public void blackRookMoves(int row, int col){
+    public void blackRookMoves(int row, int col) {
         blackRookMoveRight(row, col);
         blackRookMoveLeft(row, col);
         blackRookMoveForward(row, col);
         blackRookMoveBack(row, col);
     }
 
-    public void blackRookMoveRight(int row, int col){
+    public void blackRookMoveRight(int row, int col) {
         int i = col + 1;
-        while(i < 8){
-            if(board[row][i] == ' '){
+        while (i < 8) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[row][i])){
+            } else if (Character.isUpperCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1098,17 +956,17 @@ public class Computer {
         }
     }
 
-    public void blackRookMoveLeft(int row, int col){
+    public void blackRookMoveLeft(int row, int col) {
         int i = col - 1;
-        while(i >= 0){
-            if(board[row][i] == ' '){
+        while (i >= 0) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[row][i])){
+            } else if (Character.isUpperCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1123,17 +981,17 @@ public class Computer {
         }
     }
 
-    public void blackRookMoveForward(int row, int col){
+    public void blackRookMoveForward(int row, int col) {
         int i = row - 1;
-        while(i >= 0){
-            if(board[i][col] == ' '){
+        while (i >= 0) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][col])){
+            } else if (Character.isUpperCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1148,17 +1006,17 @@ public class Computer {
         }
     }
 
-    public void blackRookMoveBack(int row, int col){
+    public void blackRookMoveBack(int row, int col) {
         int i = row + 1;
-        while(i < 8){
-            if(board[i][col] == ' '){
+        while (i < 8) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][col])){
+            } else if (Character.isUpperCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1175,7 +1033,7 @@ public class Computer {
     //endregion
 
     //region Black Queen moves
-    public void blackQueenMoves(int row, int col){
+    public void blackQueenMoves(int row, int col) {
         blackQueenMoveRight(row, col);
         blackQueenMoveLeft(row, col);
         blackQueenMoveForward(row, col);
@@ -1186,17 +1044,17 @@ public class Computer {
         blackQueenRightDiagonalBack(row, col);
     }
 
-    public void blackQueenMoveRight(int row, int col){
+    public void blackQueenMoveRight(int row, int col) {
         int i = col + 1;
-        while(i < 8){
-            if(board[row][i] == ' '){
+        while (i < 8) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[row][i])){
+            } else if (Character.isUpperCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1211,17 +1069,17 @@ public class Computer {
         }
     }
 
-    public void blackQueenMoveLeft(int row, int col){
+    public void blackQueenMoveLeft(int row, int col) {
         int i = col - 1;
-        while(i >= 0){
-            if(board[row][i] == ' '){
+        while (i >= 0) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[row][i])){
+            } else if (Character.isUpperCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1236,17 +1094,17 @@ public class Computer {
         }
     }
 
-    public void blackQueenMoveForward(int row, int col){
+    public void blackQueenMoveForward(int row, int col) {
         int i = row + 1;
-        while(i < 8){
-            if(board[i][col] == ' '){
+        while (i < 8) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][col])){
+            } else if (Character.isUpperCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1261,17 +1119,17 @@ public class Computer {
         }
     }
 
-    public void blackQueenMoveBack(int row, int col){
+    public void blackQueenMoveBack(int row, int col) {
         int i = row - 1;
-        while(i >= 0){
-            if(board[i][col] == ' '){
+        while (i >= 0) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][col])){
+            } else if (Character.isUpperCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1286,18 +1144,18 @@ public class Computer {
         }
     }
 
-    public void blackQueenLeftDiagonalForward(int row, int col){
+    public void blackQueenLeftDiagonalForward(int row, int col) {
         int i = row + 1;
         int j = col - 1;
-        while(i < 8 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i < 8 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1313,18 +1171,18 @@ public class Computer {
         }
     }
 
-    public void blackQueenRightDiagonalForward(int row, int col){
+    public void blackQueenRightDiagonalForward(int row, int col) {
         int i = row + 1;
         int j = col + 1;
-        while(i < 8 && j < 8){
-            if(board[i][j] == ' '){
+        while (i < 8 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1340,18 +1198,18 @@ public class Computer {
         }
     }
 
-    public void blackQueenLeftDiagonalBack(int row, int col){
+    public void blackQueenLeftDiagonalBack(int row, int col) {
         int i = row - 1;
         int j = col - 1;
-        while(i >= 0 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1367,18 +1225,18 @@ public class Computer {
         }
     }
 
-    public void blackQueenRightDiagonalBack(int row, int col){
+    public void blackQueenRightDiagonalBack(int row, int col) {
         int i = row - 1;
         int j = col + 1;
-        while(i >= 0 && j < 8){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isUpperCase(board[i][j])){
+            } else if (Character.isUpperCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1398,7 +1256,7 @@ public class Computer {
     //endregion
 
     //region White Queen moves
-    public void whiteQueenMoves(int row, int col){
+    public void whiteQueenMoves(int row, int col) {
         whiteQueenMoveRight(row, col);
         whiteQueenMoveLeft(row, col);
         whiteQueenMoveForward(row, col);
@@ -1409,17 +1267,17 @@ public class Computer {
         whiteQueenRightDiagonalBack(row, col);
     }
 
-    public void whiteQueenMoveRight(int row, int col){
+    public void whiteQueenMoveRight(int row, int col) {
         int i = col + 1;
-        while(i < 8){
-            if(board[row][i] == ' '){
+        while (i < 8) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[row][i])){
+            } else if (Character.isLowerCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1434,17 +1292,17 @@ public class Computer {
         }
     }
 
-    public void whiteQueenMoveLeft(int row, int col){
+    public void whiteQueenMoveLeft(int row, int col) {
         int i = col - 1;
-        while(i >= 0){
-            if(board[row][i] == ' '){
+        while (i >= 0) {
+            if (board[row][i] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
                 move.piece = board[row][col];
                 move.content = board[row][i];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[row][i])){
+            } else if (Character.isLowerCase(board[row][i])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row, i};
@@ -1459,17 +1317,17 @@ public class Computer {
         }
     }
 
-    public void whiteQueenMoveForward(int row, int col){
+    public void whiteQueenMoveForward(int row, int col) {
         int i = row - 1;
-        while(i >= 0){
-            if(board[i][col] == ' '){
+        while (i >= 0) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][col])){
+            } else if (Character.isLowerCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1484,17 +1342,17 @@ public class Computer {
         }
     }
 
-    public void whiteQueenMoveBack(int row, int col){
+    public void whiteQueenMoveBack(int row, int col) {
         int i = row + 1;
-        while(i < 8){
-            if(board[i][col] == ' '){
+        while (i < 8) {
+            if (board[i][col] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
                 move.piece = board[row][col];
                 move.content = board[i][col];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][col])){
+            } else if (Character.isLowerCase(board[i][col])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, col};
@@ -1509,18 +1367,18 @@ public class Computer {
         }
     }
 
-    public void whiteQueenLeftDiagonalForward(int row, int col){
+    public void whiteQueenLeftDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col - 1;
-        while(i >= 0 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1536,18 +1394,18 @@ public class Computer {
         }
     }
 
-    public void whiteQueenRightDiagonalForward(int row, int col){
+    public void whiteQueenRightDiagonalForward(int row, int col) {
         int i = row - 1;
         int j = col + 1;
-        while(i >= 0 && j < 8){
-            if(board[i][j] == ' '){
+        while (i >= 0 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1563,18 +1421,18 @@ public class Computer {
         }
     }
 
-    public void whiteQueenLeftDiagonalBack(int row, int col){
+    public void whiteQueenLeftDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col - 1;
-        while(i < 8 && j >= 0){
-            if(board[i][j] == ' '){
+        while (i < 8 && j >= 0) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1590,18 +1448,18 @@ public class Computer {
         }
     }
 
-    public void whiteQueenRightDiagonalBack(int row, int col){
+    public void whiteQueenRightDiagonalBack(int row, int col) {
         int i = row + 1;
         int j = col + 1;
-        while(i < 8 && j < 8){
-            if(board[i][j] == ' '){
+        while (i < 8 && j < 8) {
+            if (board[i][j] == ' ') {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
                 move.piece = board[row][col];
                 move.content = board[i][j];
                 possibleMoves.add(move);
-            } else if(Character.isLowerCase(board[i][j])){
+            } else if (Character.isLowerCase(board[i][j])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{i, j};
@@ -1620,57 +1478,57 @@ public class Computer {
 
 
     //region Black King moves
-    public void blackKingMoves(int row, int col){
-        if(row + 1 < 8){
-            if(board[row + 1][col] == ' ' || Character.isUpperCase(board[row + 1][col])){
+    public void blackKingMoves(int row, int col) {
+        if (row + 1 < 8) {
+            if (board[row + 1][col] == ' ' || Character.isUpperCase(board[row + 1][col])) {
                 blackKingMoveForward(row, col);
             }
         }
 
-        if(row - 1 >= 0){
-            if(board[row - 1][col] == ' ' || Character.isUpperCase(board[row - 1][col])){
+        if (row - 1 >= 0) {
+            if (board[row - 1][col] == ' ' || Character.isUpperCase(board[row - 1][col])) {
                 blackKingMoveBack(row, col);
             }
         }
 
-        if(col - 1 >= 0){
-            if(board[row][col - 1] == ' ' || Character.isUpperCase(board[row][col - 1])){
+        if (col - 1 >= 0) {
+            if (board[row][col - 1] == ' ' || Character.isUpperCase(board[row][col - 1])) {
                 blackKingMoveLeft(row, col);
             }
         }
 
-        if(col + 1 < 8){
-            if(board[row][col + 1] == ' ' || Character.isUpperCase(board[row][col + 1])){
+        if (col + 1 < 8) {
+            if (board[row][col + 1] == ' ' || Character.isUpperCase(board[row][col + 1])) {
                 blackKingMoveRight(row, col);
             }
         }
 
-        if(row + 1 < 8 && col - 1 >= 0){
-            if(board[row + 1][col - 1] == ' ' || Character.isUpperCase(board[row + 1][col - 1])){
+        if (row + 1 < 8 && col - 1 >= 0) {
+            if (board[row + 1][col - 1] == ' ' || Character.isUpperCase(board[row + 1][col - 1])) {
                 blackKingMoveDiagonalLeftForward(row, col);
             }
         }
 
-        if(row + 1 < 8 && col + 1 < 8){
-            if(board[row + 1][col + 1] == ' ' || Character.isUpperCase(board[row + 1][col + 1])){
+        if (row + 1 < 8 && col + 1 < 8) {
+            if (board[row + 1][col + 1] == ' ' || Character.isUpperCase(board[row + 1][col + 1])) {
                 blackKingMoveDiagonalRightForward(row, col);
             }
         }
 
-        if(row - 1 >= 0 && col - 1 >= 0){
-            if(board[row - 1][col - 1] == ' ' || Character.isUpperCase(board[row - 1][col - 1])){
+        if (row - 1 >= 0 && col - 1 >= 0) {
+            if (board[row - 1][col - 1] == ' ' || Character.isUpperCase(board[row - 1][col - 1])) {
                 blackKingMoveDiagonalLeftBack(row, col);
             }
         }
 
-        if(row - 1 >= 0 && col + 1 < 8){
-            if(board[row - 1][col + 1] == ' ' || Character.isUpperCase(board[row - 1][col + 1])){
+        if (row - 1 >= 0 && col + 1 < 8) {
+            if (board[row - 1][col + 1] == ' ' || Character.isUpperCase(board[row - 1][col + 1])) {
                 blackKingMoveDiagonalRightBack(row, col);
             }
         }
     }
 
-    public void blackKingMoveForward(int row, int col){
+    public void blackKingMoveForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row + 1, col};
@@ -1679,7 +1537,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackKingMoveBack(int row, int col){
+    public void blackKingMoveBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row - 1, col};
@@ -1688,7 +1546,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackKingMoveLeft(int row, int col){
+    public void blackKingMoveLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col - 1};
@@ -1697,7 +1555,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackKingMoveRight(int row, int col){
+    public void blackKingMoveRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col + 1};
@@ -1706,9 +1564,9 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void blackKingMoveDiagonalLeftForward(int row, int col){
-        if(row + 1 < 8 && col - 1 >= 0){
-            if(board[row + 1][col - 1] == ' ' || Character.isUpperCase(board[row + 1][col - 1])){
+    public void blackKingMoveDiagonalLeftForward(int row, int col) {
+        if (row + 1 < 8 && col - 1 >= 0) {
+            if (board[row + 1][col - 1] == ' ' || Character.isUpperCase(board[row + 1][col - 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row + 1, col - 1};
@@ -1719,9 +1577,9 @@ public class Computer {
         }
     }
 
-    public void blackKingMoveDiagonalRightForward(int row, int col){
-        if(row + 1 < 8 && col + 1 < 8){
-            if(board[row + 1][col + 1] == ' ' || Character.isUpperCase(board[row + 1][col + 1])){
+    public void blackKingMoveDiagonalRightForward(int row, int col) {
+        if (row + 1 < 8 && col + 1 < 8) {
+            if (board[row + 1][col + 1] == ' ' || Character.isUpperCase(board[row + 1][col + 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row + 1, col + 1};
@@ -1732,9 +1590,9 @@ public class Computer {
         }
     }
 
-    public void blackKingMoveDiagonalLeftBack(int row, int col){
-        if(row - 1 >= 0 && col - 1 >= 0){
-            if(board[row - 1][col - 1] == ' ' || Character.isUpperCase(board[row - 1][col - 1])){
+    public void blackKingMoveDiagonalLeftBack(int row, int col) {
+        if (row - 1 >= 0 && col - 1 >= 0) {
+            if (board[row - 1][col - 1] == ' ' || Character.isUpperCase(board[row - 1][col - 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row - 1, col - 1};
@@ -1745,9 +1603,9 @@ public class Computer {
         }
     }
 
-    public void blackKingMoveDiagonalRightBack(int row, int col){
-        if(row - 1 >= 0 && col + 1 < 8){
-            if(board[row - 1][col + 1] == ' ' || Character.isUpperCase(board[row - 1][col + 1])){
+    public void blackKingMoveDiagonalRightBack(int row, int col) {
+        if (row - 1 >= 0 && col + 1 < 8) {
+            if (board[row - 1][col + 1] == ' ' || Character.isUpperCase(board[row - 1][col + 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row - 1, col + 1};
@@ -1760,57 +1618,57 @@ public class Computer {
     //endregion
 
     //region White King moves
-    public void whiteKingMoves(int row, int col){
-        if(row - 1 >= 0){
-            if(board[row - 1][col] == ' ' || Character.isLowerCase(board[row - 1][col])){
+    public void whiteKingMoves(int row, int col) {
+        if (row - 1 >= 0) {
+            if (board[row - 1][col] == ' ' || Character.isLowerCase(board[row - 1][col])) {
                 whiteKingMoveForward(row, col);
             }
         }
 
-        if(row + 1 < 8){
-            if(board[row + 1][col] == ' ' || Character.isLowerCase(board[row + 1][col])){
+        if (row + 1 < 8) {
+            if (board[row + 1][col] == ' ' || Character.isLowerCase(board[row + 1][col])) {
                 whiteKingMoveBack(row, col);
             }
         }
 
-        if(col - 1 >= 0){
-            if(board[row][col - 1] == ' ' || Character.isLowerCase(board[row][col - 1])){
+        if (col - 1 >= 0) {
+            if (board[row][col - 1] == ' ' || Character.isLowerCase(board[row][col - 1])) {
                 whiteKingMoveLeft(row, col);
             }
         }
 
-        if(col + 1 < 8){
-            if(board[row][col + 1] == ' ' || Character.isLowerCase(board[row][col + 1])){
+        if (col + 1 < 8) {
+            if (board[row][col + 1] == ' ' || Character.isLowerCase(board[row][col + 1])) {
                 whiteKingMoveRight(row, col);
             }
         }
 
-        if(row - 1 >= 0 && col - 1 >= 0){
-            if(board[row - 1][col - 1] == ' ' || Character.isLowerCase(board[row - 1][col - 1])){
+        if (row - 1 >= 0 && col - 1 >= 0) {
+            if (board[row - 1][col - 1] == ' ' || Character.isLowerCase(board[row - 1][col - 1])) {
                 whiteKingMoveDiagonalLeftForward(row, col);
             }
         }
 
-        if(row - 1 >= 0 && col + 1 < 8){
-            if(board[row - 1][col + 1] == ' ' || Character.isLowerCase(board[row - 1][col + 1])){
+        if (row - 1 >= 0 && col + 1 < 8) {
+            if (board[row - 1][col + 1] == ' ' || Character.isLowerCase(board[row - 1][col + 1])) {
                 whiteKingMoveDiagonalRightForward(row, col);
             }
         }
 
-        if(row + 1 < 8 && col - 1 >= 0){
-            if(board[row + 1][col - 1] == ' ' || Character.isLowerCase(board[row + 1][col - 1])){
+        if (row + 1 < 8 && col - 1 >= 0) {
+            if (board[row + 1][col - 1] == ' ' || Character.isLowerCase(board[row + 1][col - 1])) {
                 whiteKingMoveDiagonalLeftBack(row, col);
             }
         }
 
-        if(row + 1 < 8 && col + 1 < 8) {
+        if (row + 1 < 8 && col + 1 < 8) {
             if (board[row + 1][col + 1] == ' ' || Character.isLowerCase(board[row + 1][col + 1])) {
                 whiteKingMoveDiagonalRightBack(row, col);
             }
         }
     }
 
-    public void whiteKingMoveForward(int row, int col){
+    public void whiteKingMoveForward(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row - 1, col};
@@ -1819,7 +1677,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void whiteKingMoveBack(int row, int col){
+    public void whiteKingMoveBack(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row + 1, col};
@@ -1828,7 +1686,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void whiteKingMoveLeft(int row, int col){
+    public void whiteKingMoveLeft(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col - 1};
@@ -1837,7 +1695,7 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void whiteKingMoveRight(int row, int col){
+    public void whiteKingMoveRight(int row, int col) {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col + 1};
@@ -1846,9 +1704,9 @@ public class Computer {
         possibleMoves.add(move);
     }
 
-    public void whiteKingMoveDiagonalLeftForward(int row, int col){
-        if(row - 1 >= 0 && col - 1 >= 0){
-            if(board[row - 1][col - 1] == ' ' || Character.isLowerCase(board[row - 1][col - 1])){
+    public void whiteKingMoveDiagonalLeftForward(int row, int col) {
+        if (row - 1 >= 0 && col - 1 >= 0) {
+            if (board[row - 1][col - 1] == ' ' || Character.isLowerCase(board[row - 1][col - 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row - 1, col - 1};
@@ -1859,9 +1717,9 @@ public class Computer {
         }
     }
 
-    public void whiteKingMoveDiagonalRightForward(int row, int col){
-        if(row - 1 >= 0 && col + 1 < 8){
-            if(board[row - 1][col + 1] == ' ' || Character.isLowerCase(board[row - 1][col + 1])){
+    public void whiteKingMoveDiagonalRightForward(int row, int col) {
+        if (row - 1 >= 0 && col + 1 < 8) {
+            if (board[row - 1][col + 1] == ' ' || Character.isLowerCase(board[row - 1][col + 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row - 1, col + 1};
@@ -1872,9 +1730,9 @@ public class Computer {
         }
     }
 
-    public void whiteKingMoveDiagonalLeftBack(int row, int col){
-        if(row + 1 < 8 && col - 1 >= 0){
-            if(board[row + 1][col - 1] == ' ' || Character.isLowerCase(board[row + 1][col - 1])){
+    public void whiteKingMoveDiagonalLeftBack(int row, int col) {
+        if (row + 1 < 8 && col - 1 >= 0) {
+            if (board[row + 1][col - 1] == ' ' || Character.isLowerCase(board[row + 1][col - 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row + 1, col - 1};
@@ -1885,9 +1743,9 @@ public class Computer {
         }
     }
 
-    public void whiteKingMoveDiagonalRightBack(int row, int col){
-        if(row + 1 < 8 && col + 1 < 8){
-            if(board[row + 1][col + 1] == ' ' || Character.isLowerCase(board[row + 1][col + 1])){
+    public void whiteKingMoveDiagonalRightBack(int row, int col) {
+        if (row + 1 < 8 && col + 1 < 8) {
+            if (board[row + 1][col + 1] == ' ' || Character.isLowerCase(board[row + 1][col + 1])) {
                 MoveType move = new MoveType();
                 move.oldSpace = new int[]{row, col};
                 move.newSpace = new int[]{row + 1, col + 1};
@@ -1898,560 +1756,5 @@ public class Computer {
         }
     }
     //endregion
-
-    public void rookMoves(int i, int j, boolean isWhite) {
-        char currentPiece = board[i][j];
-
-        // Rook moves horizontally to the right
-        for (int k = j + 1; k < 8; k++) {
-            char content = board[i][k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i, k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                }
-                break;
-            }
-        }
-
-        // Rook moves horizontally to the left
-        for (int k = j - 1; k >= 0; k--) {
-            char content = board[i][k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i, k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                }
-            }
-        }
-
-        // Rook moves vertically upwards
-        for (int k = i - 1; k >= 0; k--) {
-            char content = board[k][j];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{k, j};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                }
-            }
-        }
-
-        // Rook moves vertically downwards
-        for (int k = i + 1; k < 8; k++) {
-            char content = board[k][j];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{k, j};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                    break;
-                }
-            }
-        }
-    }
-
-    public void queenMoves(int i, int j, boolean isWhite) {
-        char currentPiece = board[i][j];
-
-        // Queen moves horizontally to the right
-        for (int k = j + 1; k < 8; k++) {
-            char content = board[i][k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i, k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                }
-                break;
-            }
-        }
-
-        // Queen moves horizontally to the left
-        for (int k = j - 1; k >= 0; k--) {
-            char content = board[i][k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i, k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i, k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves vertically upwards
-        for (int k = i - 1; k >= 0; k--) {
-            char content = board[k][j];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{k, j};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves vertically downwards
-        for (int k = i + 1; k < 8; k++) {
-            char content = board[k][j];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{k, j};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, j};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves diagonally upwards to the right
-        for (int k = 1; i - k >= 0 && j + k < 8; k++) {
-            char content = board[i - k][j + k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i - k, j + k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i - k, j + k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i - k, j + k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves diagonally upwards to the left
-        for (int k = 1; i - k >= 0 && j - k >= 0; k++) {
-            char content = board[i - k][j - k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i - k, j - k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i - k, j - k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i - k, j - k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves diagonally downwards to the right
-        for (int k = 1; i + k < 8 && j + k < 8; k++) {
-            char content = board[i + k][j + k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i + k, j + k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i + k, j + k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i + k, j + k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-
-        // Queen moves diagonally downwards to the left
-        for (int k = 1; i + k < 8 && j - k >= 0; k++) {
-            char content = board[i + k][j - k];
-            if (content == ' ') {
-                // Empty space, add move
-                MoveType move = new MoveType();
-                move.oldSpace = new int[]{i, j};
-                move.newSpace = new int[]{i + k, j - k};
-                move.piece = currentPiece;
-                move.content = content;
-                possibleMoves.add(move);
-            } else {
-                // Opponent's piece, check if capture is possible
-                if (Character.isLowerCase(currentPiece)) {
-                    // Current piece is black
-                    if (Character.isUpperCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i + k, j - k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                    // Stop considering moves in this direction
-                } else {
-                    // Current piece is white
-                    if (Character.isLowerCase(content)) {
-                        // Can capture opponent's piece
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{i + k, j - k};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    }
-                }
-                break;
-            }
-        }
-    }
-
-    public void kingMoves(int i, int j, boolean isWhite) {
-        char currentPiece = board[i][j];
-
-        // King moves one step in all directions
-        for (int k = i - 1; k <= i + 1; k++) {
-            for (int l = j - 1; l <= j + 1; l++) {
-                if (k >= 0 && k < 8 && l >= 0 && l < 8) {
-                    char content = board[k][l];
-                    if (content == ' ') {
-                        // Empty space, add move
-                        MoveType move = new MoveType();
-                        move.oldSpace = new int[]{i, j};
-                        move.newSpace = new int[]{k, l};
-                        move.piece = currentPiece;
-                        move.content = content;
-                        possibleMoves.add(move);
-                    } else {
-                        // Opponent's piece, check if capture is possible
-                        if (Character.isLowerCase(currentPiece)) {
-                            // Current piece is black
-                            if (Character.isUpperCase(content)) {
-                                // Can capture opponent's piece
-                                MoveType move = new MoveType();
-                                move.oldSpace = new int[]{i, j};
-                                move.newSpace = new int[]{k, l};
-                                move.piece = currentPiece;
-                                move.content = content;
-                                possibleMoves.add(move);
-                            }
-                        } else {
-                            // Current piece is white
-                            if (Character.isLowerCase(content)) {
-                                // Can capture opponent's piece
-                                MoveType move = new MoveType();
-                                move.oldSpace = new int[]{i, j};
-                                move.newSpace = new int[]{k, l};
-                                move.piece = currentPiece;
-                                move.content = content;
-                                possibleMoves.add(move);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-    }
 }
+
