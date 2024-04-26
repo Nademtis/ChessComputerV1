@@ -114,13 +114,9 @@ public class Board {
                 break;
             }*/
 
-
             //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
     }
 
-    public static void main(String[] args) {
-        Board board = new Board();
-        board.gameLoop();
-    }
+
 }
