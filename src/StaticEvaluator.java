@@ -6,25 +6,29 @@ public class StaticEvaluator {
     private static final int QUEEN_VALUE = 900;
     private static final int KING_VALUE = 10000; // vi kan tweak disse værdier for at få bedre results
 
-    public int evaluate(char[][] board, boolean isWhite) {
-        int score = 0;
+    public int evaluate(char[][] board) {
+        int blackScore = 0;
+        int whiteScore = 0;
 
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 char piece = board[i][j];
                 if (piece != ' ') {
-                    score += getPieceValue(piece);
 
-                    //kalder de rigtige metoder med udgangspunkt i hvilken tur det er
-                    score += isWhite ? getPieceSquareValueWhite(piece, i, j) : getPieceSquareValueBlack(piece, i, j);
+                    if (Character.isUpperCase(piece)){
+                        whiteScore += getPieceValue(piece);
+                        whiteScore += getPieceSquareValueWhite(piece, i, j);
+                    }else {
+                        blackScore += getPieceValue(piece);
+                        blackScore += getPieceSquareValueBlack(piece, i, j);
+                    }
+
                 }
             }
         }
         //når det er sort tur - negativ værdi fordi MIN player
-        if (!isWhite) {
-            score *= -1;
-        }
-        return score;
+
+        return whiteScore - blackScore;
     }
 
     private static int getPieceValue(char piece) {
