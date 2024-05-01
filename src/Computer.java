@@ -36,8 +36,8 @@ public class Computer {
         System.out.println(computer.possibleMoves.size());
     }
 
-    public char[][] computerMakeMove(int depth) {
-        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+    public char[][] computerMakeMove(int depth, boolean isWhiteTurn) {
+        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
         applyMove(bestResult.getBestMove());
 
