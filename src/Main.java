@@ -6,7 +6,6 @@ public class Main {
                 "1. Start Game",
                 "2. Computer vs Computer",
                 "3. Option 3",
-                "4. Option 4",
                 "9. Exit\n"} );
 
         menu.fullMenuPrint();

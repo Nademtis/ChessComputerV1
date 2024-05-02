@@ -30,21 +30,29 @@ public class Menu {
         boolean menuIsRunning;
 
         do {
-            menuChoice = Integer.parseInt(in.nextLine());
+            try {
+                menuChoice = Integer.parseInt(in.nextLine());
 
-            if (menuChoice > 0 && menuChoice <= menuItems.length) {
-                menuIsRunning = false;
-            } else if (menuChoice == 9) {
-                System.out.println("Shutting down...");
-                menuIsRunning = false;
-            } else {
-                printMenu();
-                System.out.println(">> Please enter valid input <<");
+                if (menuChoice > 0 && menuChoice <= menuItems.length) {
+                    menuIsRunning = false;
+                } else if (menuChoice == 9) {
+                    System.out.println("Shutting down...");
+                    menuIsRunning = false;
+                } else {
+                    System.out.println(">> Please enter valid input <<");
+                    System.out.print(leadText);
+                    menuIsRunning = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(">> You can't input characters! Please enter a number. <<");
+                System.out.print(leadText);
                 menuIsRunning = true;
+                menuChoice = -1;
             }
         } while (menuIsRunning);
         return menuChoice;
     }
+
 
 
     public void menuContent() {
@@ -61,9 +69,6 @@ public class Menu {
                 break;
             case 3:
                 System.out.println("Option 3");
-                break;
-            case 4:
-                System.out.println("Option 4");
                 break;
             case 9:
                 keepGoing = false;
