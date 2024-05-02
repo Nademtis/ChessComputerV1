@@ -36,8 +36,8 @@ public class Computer {
         System.out.println(computer.possibleMoves.size());
     }
 
-    public char[][] computerMakeMove(int depth) {
-        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, false);
+    public char[][] computerMakeMove(int depth, boolean isWhiteTurn) {
+        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
         applyMove(bestResult.getBestMove());
 
@@ -47,7 +47,7 @@ public class Computer {
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         if (depth == 0) { // todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board, maximizingPlayer), null);
+            return new MinMaxResult(new StaticEvaluator().evaluate(board), null);
         }
 
         ArrayList<MoveType> moveList;

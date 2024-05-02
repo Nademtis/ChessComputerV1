@@ -26,7 +26,6 @@ public class Board {
     };*/
 
 
-
     //En måde på at tjekke om et træk er lovligt
 
     private static String getPieceSymbol(char piece) {
@@ -72,7 +71,7 @@ public class Board {
     }
 
 
-    public void makeMove(String move){
+    public void makeMove(String move) {
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
         int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;
         int toChar = Character.getNumericValue(move.charAt(4)) - 10;
@@ -85,15 +84,15 @@ public class Board {
         board[toNum][toChar] = piece;
     }
 
-    public void gameLoop(){
+    public void gameLoop() {
         System.out.println("Welcome to Chess");
         Scanner in = new Scanner(System.in);
         String move;
-        while(true){
+        while (true) {
             drawBoard(board);
             System.out.println("White turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
             move = in.nextLine();
-            if(move.equals("exit")){
+            if (move.equals("exit")) {
                 break;
             }
             //System.out.println("staticEval for White " + new StaticEvaluator().evaluate(board,true));
@@ -103,7 +102,7 @@ public class Board {
 
             System.out.println("Black/computer is thinking... hold on");
             Computer computer = new Computer(board);
-            board = computer.computerMakeMove(4);
+            board = computer.computerMakeMove(6, false);
             System.out.println("computer is done.");
 
 
@@ -118,5 +117,46 @@ public class Board {
         }
     }
 
+    public void computerVSComputer() {
+        System.out.println("Robot vs Robot... start!");
+        Computer computer;
+        while (true) {
+            computer = new Computer(board);
+            System.out.println("White/computer is thinking... hold on");
+            board = computer.computerMakeMove(6, true);
+            System.out.println("white computer is done");
+            drawBoard(board);
+
+            System.out.println("-------------------------------------------");
+            /*try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
+
+            computer = new Computer(board);
+            System.out.println("Black/computer is thinking... hold on");
+            board = computer.computerMakeMove(5, false);
+            System.out.println("black computer is done");
+            drawBoard(board);
+
+            /*try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }*/
+
+            //code below is for manually moving black
+            //move = in.nextLine();
+            /*makeMove(move);
+            if(move.equals("exit")){
+                break;
+            }*/
+
+            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
+        }
+    }
 
 }
+
