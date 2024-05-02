@@ -10,6 +10,5 @@ public class Main {
                 "9. Exit\n"} );
 
         menu.fullMenuPrint();
-        menu.readChoice();
     }
 }
