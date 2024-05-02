@@ -44,7 +44,7 @@ public class Menu {
                     menuIsRunning = true;
                 }
             } catch (NumberFormatException e) {
-                System.out.println(">> You can't input characters! Please enter a number. <<");
+                System.out.println(">> You can't input characters <<");
                 System.out.print(leadText);
                 menuIsRunning = true;
                 menuChoice = -1;
