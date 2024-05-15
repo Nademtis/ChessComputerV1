@@ -71,7 +71,7 @@ public class Board {
     }
 
 
-    public void makeMove(String move) {
+    public boolean makeMove(String move, boolean isWhiteTurn) {
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
         int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;
         int toChar = Character.getNumericValue(move.charAt(4)) - 10;
@@ -80,41 +80,86 @@ public class Board {
         System.out.println(fromChar + " " + fromNum + " " + toChar + " " + toNum);
 
         char piece = board[fromNum][fromChar];
-        board[fromNum][fromChar] = ' ';
-        board[toNum][toChar] = piece;
+
+        if (isWhiteTurn && Character.isLowerCase(piece) ||
+                !isWhiteTurn && Character.isUpperCase(piece)) {
+            System.out.println("Invalid move: Cannot move opponent's piece.");
+            return false;
+        } else {
+            board[fromNum][fromChar] = ' ';
+            board[toNum][toChar] = piece;
+            return true;
+        }
     }
 
     public void gameLoop() {
         System.out.println("Welcome to Chess");
         Scanner in = new Scanner(System.in);
-        String move;
+
+        //Choosing sides
+        String side;
         while (true) {
-            drawBoard(board);
-            System.out.println("White turn. Enter move(pieceCoord, move to Coord) Example: b2, b4");
-            move = in.nextLine();
-            if (move.equals("exit")) {
+            System.out.println("Choose your side (White or Black): ");
+            side = in.nextLine().toUpperCase();
+            if (side.equals("WHITE") || side.equals("BLACK")) {
                 break;
+            } else {
+                System.out.println("Invalid choice. Please enter 'White' or 'Black'.");
             }
-            //System.out.println("staticEval for White " + new StaticEvaluator().evaluate(board,true));
-            makeMove(move);
-            drawBoard(board);
-            System.out.println("-------------------------------------------");
-
-            System.out.println("Black/computer is thinking... hold on");
-            Computer computer = new Computer(board);
-            board = computer.computerMakeMove(6, false);
-            System.out.println("computer is done.");
-
-
-            //code below is for manually moving black
-            //move = in.nextLine();
-            /*makeMove(move);
-            if(move.equals("exit")){
-                break;
-            }*/
-
-            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
+        boolean isWhiteSide = side.equals("WHITE");
+
+        //Game loop
+        String move;
+        boolean validMove = false;
+        boolean exit = false;
+
+        do {
+            drawBoard(board);
+
+            if (isWhiteSide) {
+                System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
+                move = in.nextLine();
+                if (move.equals("exit")) {
+                    exit = true;
+                    break;
+                }
+                while (!validMove) {
+                    validMove = makeMove(move, true);
+                    if (!validMove) {
+                        System.out.println("Invalid move. Please enter a valid move:");
+                        move = in.nextLine();
+                    }
+                }
+                validMove = false; // Reset validMove flag
+                drawBoard(board);
+                System.out.println("-------------------------------------------");
+                System.out.println("Black/computer is thinking... hold on");
+                Computer computer = new Computer(board);
+                board = computer.computerMakeMove(6, false);
+                System.out.println("Computer is done.");
+            } else {
+                System.out.println("You chose Black. Computer (White) will make the first move.");
+                Computer computer = new Computer(board);
+                board = computer.computerMakeMove(6, true);
+                drawBoard(board);
+                System.out.println("-------------------------------------------");
+                System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
+                move = in.nextLine();
+                if (move.equals("exit")) {
+                    exit = true;
+                    break;
+                }
+                while (!validMove) {
+                    validMove = makeMove(move, false);
+                    if (!validMove) {
+                        System.out.println("Invalid move. Please enter a valid move:");
+                        move = in.nextLine();
+                    }
+                }
+                validMove = false;
+            }
+        } while (!exit);
     }
 
     public void computerVSComputer() {
