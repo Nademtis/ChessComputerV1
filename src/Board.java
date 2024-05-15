@@ -128,7 +128,7 @@ public class Board {
                     validMove = makeMove(move, true);
                     if (!validMove) {
                         System.out.println("Invalid move. Please enter a valid move:");
-                        move = in.nextLine(); // Prompt again for a move
+                        move = in.nextLine();
                     }
                 }
                 validMove = false; // Reset validMove flag
@@ -145,20 +145,19 @@ public class Board {
                 drawBoard(board);
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
-
+                move = in.nextLine();
+                if (move.equals("exit")) {
+                    exit = true;
+                    break;
+                }
                 while (!validMove) {
-                    move = in.nextLine();
-                    if (move.equals("exit")) {
-                        exit = true;
-                        break;
-                    }
                     validMove = makeMove(move, false);
                     if (!validMove) {
                         System.out.println("Invalid move. Please enter a valid move:");
-                        move = in.nextLine(); // Prompt again for a move
+                        move = in.nextLine();
                     }
                 }
-                validMove = false; // Reset validMove flag
+                validMove = false;
             }
         } while (!exit);
     }
