@@ -85,11 +85,11 @@ public class Board {
                 !isWhiteTurn && Character.isUpperCase(piece)) {
             System.out.println("Invalid move: Cannot move opponent's piece.");
             return false;
+        } else {
+            board[fromNum][fromChar] = ' ';
+            board[toNum][toChar] = piece;
+            return true;
         }
-
-        board[fromNum][fromChar] = ' ';
-        board[toNum][toChar] = piece;
-        return true;
     }
 
     public void gameLoop() {
@@ -119,24 +119,25 @@ public class Board {
 
             if (isWhiteSide) {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
+                move = in.nextLine();
+                if (move.equals("exit")) {
+                    exit = true;
+                    break;
+                }
                 while (!validMove) {
-                    move = in.nextLine();
-                    if (move.equals("exit")) {
-                        exit = true;
-                        break;
-                    }
                     validMove = makeMove(move, true);
                     if (!validMove) {
                         System.out.println("Invalid move. Please enter a valid move:");
+                        move = in.nextLine(); // Prompt again for a move
                     }
                 }
-                validMove = false;
+                validMove = false; // Reset validMove flag
                 drawBoard(board);
                 System.out.println("-------------------------------------------");
                 System.out.println("Black/computer is thinking... hold on");
                 Computer computer = new Computer(board);
                 board = computer.computerMakeMove(6, false);
-                System.out.println("computer is done.");
+                System.out.println("Computer is done.");
             } else {
                 System.out.println("You chose Black. Computer (White) will make the first move.");
                 Computer computer = new Computer(board);
@@ -154,18 +155,11 @@ public class Board {
                     validMove = makeMove(move, false);
                     if (!validMove) {
                         System.out.println("Invalid move. Please enter a valid move:");
+                        move = in.nextLine(); // Prompt again for a move
                     }
                 }
-                validMove = false;
+                validMove = false; // Reset validMove flag
             }
-
-            //code below is for manually moving black
-            //move = in.nextLine();
-            /*makeMove(move);
-            if(move.equals("exit")){
-                break;
-            }*/
-            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         } while (!exit);
     }
 
