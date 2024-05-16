@@ -15,7 +15,7 @@ public class Computer {
         };
 
         char[][] tempBoard2 = {
-                {'k', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {'P', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -29,11 +29,15 @@ public class Computer {
 
         //computer.generateMoves();
         //System.out.println(computer.possibleMoves);
-        computer.generateMoveListBlack();
+        computer.generateMoveListWhite();
         for (int i = 0; i < computer.possibleMoves.size(); i++) {
             System.out.println(computer.possibleMoves.get(i));
         }
         System.out.println(computer.possibleMoves.size());
+
+        Board board = new Board();
+
+        board.drawBoard(tempBoard2);
     }
 
     public char[][] computerMakeMove(int depth, boolean isWhiteTurn) {
@@ -243,8 +247,8 @@ public class Computer {
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col};
-        move.piece = board[row][col];
-        move.content = 'Q';
+        move.piece = 'Q';
+        move.content = 'P';
         possibleMoves.add(move);
     }
 
