@@ -104,6 +104,18 @@ public class Board {
         System.out.println("Welcome to Chess");
         Scanner in = new Scanner(System.in);
 
+        System.out.println("Do you want to start from FEN string: (yes/no)");
+        String startFromFen = in.nextLine();
+        if (startFromFen.equals("yes")) {
+            System.out.println("Enter FEN string:");
+            String fenString = in.nextLine();
+            char[][] fenBoard = FenGenerator.interpretFEN(fenString);
+            for (int i = 0; i < fenBoard.length; i++) {
+                System.out.println(Arrays.toString(fenBoard[i]));
+            }
+            board = FenGenerator.interpretFEN(fenString);
+        }
+
         //Choosing sides
         String side = chooseSide();
         boolean isWhiteSide = side.equals("WHITE");
@@ -121,6 +133,10 @@ public class Board {
                 move = in.nextLine();
                 if (move.equals("exit")) {
                     exit = true;
+                    break;
+                }
+                if (move.equals("fen")){
+                    System.out.println(FenGenerator.generateFen(board, true, 0, 1));
                     break;
                 }
                 while (!validMove) {
