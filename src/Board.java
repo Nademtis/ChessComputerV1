@@ -4,6 +4,14 @@ import java.util.Scanner;
 public class Board {
     //Fen String generator
 
+    public Board(int depth){
+        this.depth = depth;
+    }
+
+    int depth = 4;
+
+    Computer computer = new Computer();
+
     char[][] board = {
             {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
             {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
@@ -97,16 +105,7 @@ public class Board {
         Scanner in = new Scanner(System.in);
 
         //Choosing sides
-        String side;
-        while (true) {
-            System.out.println("Choose your side (White or Black): ");
-            side = in.nextLine().toUpperCase();
-            if (side.equals("WHITE") || side.equals("BLACK")) {
-                break;
-            } else {
-                System.out.println("Invalid choice. Please enter 'White' or 'Black'.");
-            }
-        }
+        String side = chooseSide();
         boolean isWhiteSide = side.equals("WHITE");
 
         //Game loop
@@ -135,13 +134,13 @@ public class Board {
                 drawBoard(board);
                 System.out.println("-------------------------------------------");
                 System.out.println("Black/computer is thinking... hold on");
-                Computer computer = new Computer(board);
-                board = computer.computerMakeMove(6, false);
+                //Computer computer = new Computer(board); //maybe not instantiate every time
+                board = computer.computerMakeMove(depth, false, board);
                 System.out.println("Computer is done.");
             } else {
                 System.out.println("You chose Black. Computer (White) will make the first move.");
-                Computer computer = new Computer(board);
-                board = computer.computerMakeMove(6, true);
+                //Computer computer = new Computer(board);
+                board = computer.computerMakeMoveMeasure(depth, true, board);
                 drawBoard(board);
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
@@ -168,7 +167,7 @@ public class Board {
         while (true) {
             computer = new Computer(board);
             System.out.println("White/computer is thinking... hold on");
-            board = computer.computerMakeMove(6, true);
+            board = computer. computerMakeMoveMeasure(depth, true, board);
             System.out.println("white computer is done");
             drawBoard(board);
 
@@ -182,7 +181,7 @@ public class Board {
 
             computer = new Computer(board);
             System.out.println("Black/computer is thinking... hold on");
-            board = computer.computerMakeMove(5, false);
+            board = computer.computerMakeMoveMeasure(depth, false, board);
             System.out.println("black computer is done");
             drawBoard(board);
 
@@ -201,6 +200,17 @@ public class Board {
 
             //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
+    }
+
+    public String chooseSide(){
+        Scanner in = new Scanner(System.in);
+        System.out.println("Choose side: White or Black");
+        String side = in.nextLine();
+        while (!side.equals("White") && !side.equals("Black")) {
+            System.out.println("Please enter a valid side: White or Black");
+            side = in.nextLine();
+        }
+        return side.toUpperCase();
     }
 
 }

@@ -8,7 +8,7 @@ public class Menu {
     private String leadText;
     private String[] menuItems;
     private boolean keepGoing = true;
-    Board board = new Board();
+    Board board = new Board(6);
 
     public Menu(String menuHeader, String leadText, String[] menuItems) {
         this.menuHeader = menuHeader;

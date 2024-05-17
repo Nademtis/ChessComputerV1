@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Computer {
+public class Computer{
 
     public static void main(String[] args) {
         char[][] tempBoard = {
@@ -35,22 +35,61 @@ public class Computer {
         }
         System.out.println(computer.possibleMoves.size());
 
-        Board board = new Board();
+        Board board = new Board(6);
 
         board.drawBoard(tempBoard2);
     }
 
-    public char[][] computerMakeMove(int depth, boolean isWhiteTurn) {
+
+    public Computer(char[][] board) {
+        this.board = board;
+    }
+
+    public Computer(){}
+
+    public char[][] board;
+
+    public ArrayList<MoveType> possibleMoves = new ArrayList<>();
+
+    public int nodes;
+
+
+    public char[][] computerMakeMove(int depth, boolean isWhiteTurn, char[][] board) {
+        this.board = board;
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
+        //Iterative Deepening
+//        for (int i = 0; i < depth + 1; i++) {
+//            bestResult = iterativeMakeMove(i, isWhiteTurn, board);
+//        }
         applyMove(bestResult.getBestMove());
+
 
         return board;
     }
 
+    public char[][] computerMakeMoveMeasure(int depth, boolean isWhiteTurn, char[][] board) {
+        this.board = board;
+        long startTime = System.nanoTime();
+        MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+        System.out.println(bestResult);
+        applyMove(bestResult.getBestMove());
+        System.out.println("Nodes: " + nodes);
+        long endTime = System.nanoTime();
+        double elapsedTime = (double) (endTime - startTime) / 1000000000;
+        System.out.println("Calculation finished in " + elapsedTime + " Seconds.");
+
+        return board;
+    }
+
+    private MinMaxResult iterativeMakeMove(int depth, boolean isWhiteTurn, char[][] board){
+        return minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+    }
+
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
-        if (depth == 0) { // todo: || gameIsOver() - king is confirmed fucked
+        nodes++;
+        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
             return new MinMaxResult(new StaticEvaluator().evaluate(board), null);
         }
 
@@ -143,13 +182,6 @@ public class Computer {
 
     //Only generate legal moves
 
-    public Computer(char[][] board) {
-        this.board = board;
-    }
-
-    public char[][] board;
-
-    public ArrayList<MoveType> possibleMoves = new ArrayList<>();
 
     public void generateMovesForWhite() {
         for (int i = 0; i < board.length; i++) {
