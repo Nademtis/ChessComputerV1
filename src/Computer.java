@@ -80,6 +80,8 @@ public class Computer{
         double elapsedTime = (double) (endTime - startTime) / 1000000000;
         System.out.println("Calculation finished in " + elapsedTime + " Seconds.");
 
+        //S = B^D Static evaluations = Branching factor ^ Depth
+
         return board;
     }
 
