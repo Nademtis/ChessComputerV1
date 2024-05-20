@@ -16,7 +16,7 @@ public class Computer{
         };
 
         char[][] tempBoard2 = {
-                {'P', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -38,6 +38,7 @@ public class Computer{
 
         Board board = new Board(6);
 
+        computer.computerMakeMove(1, true, tempBoard2);
         board.drawBoard(tempBoard2);
     }
 
