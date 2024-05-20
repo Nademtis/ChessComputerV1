@@ -174,6 +174,7 @@ public class Board {
     }
 
     public boolean makeMove(String move, boolean isWhiteTurn) {
+        //todo change how a move is made, idea: move = "pawn e4" where you check what piece can move to that position
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
         int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;
         int toChar = Character.getNumericValue(move.charAt(4)) - 10;
