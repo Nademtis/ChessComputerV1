@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class FenGenerator {
     public static void main(String[] args) {
         char[][] board = new char[8][8];
@@ -76,8 +78,7 @@ public class FenGenerator {
     }
 
     public static char[][] interpretFEN(String fenString) {
-        String[] parts = fenString.split(" ");
-        String[] rows = parts[0].split("/");
+        String[] rows = fenString.split("/");
         char[][] board = new char[8][8];
 
         for (int i = 0; i < 8; i++) {

@@ -36,7 +36,12 @@ public class Board {
         //Game loop
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
-            board = computer.computerMakeMoveMeasure(depth, true, board);
+            board = computer.computerMakeMove(depth, true, board);
+            drawBoard(board);
+            System.out.println("-------------------------------------------");
+            System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
+            playerMove(false);
+
         }
 
         do {
@@ -56,7 +61,9 @@ public class Board {
                 playerMove(false);
 
             }
-            System.out.println(FenGenerator.generateFen(board, true, 0, 1));
+            if(!exit) {
+                System.out.println(FenGenerator.generateFen(board, true, 0, 1));
+            }
         } while (!exit);
     }
 
@@ -111,6 +118,7 @@ public class Board {
             exit = true;
         } else if(move.equals("fen")){
             System.out.println(FenGenerator.generateFen(board, whitePlay, 0, 1));
+            exit = true;
         } else {
             while(!validMove){
                 validMove = makeMove(move, whitePlay);
@@ -143,11 +151,25 @@ public class Board {
         if (startFromFen.equals("yes")) {
             System.out.println("Enter FEN string:");
             String fenString = in.nextLine();
-            char[][] fenBoard = FenGenerator.interpretFEN(fenString);
+            String[] fenParts = fenString.split(" ");
+            System.out.println(Arrays.toString(fenParts));
+            char[][] fenBoard = FenGenerator.interpretFEN(fenParts[0]);
             for (int i = 0; i < fenBoard.length; i++) {
                 System.out.println(Arrays.toString(fenBoard[i]));
+        }
+            board = FenGenerator.interpretFEN(fenParts[0]);
+
+            if(fenParts[1].equals("b")){
+                System.out.println("Black turn. Should I make the first move? (yes/no)");
+                String makeFirstMove = in.nextLine();
+                if(makeFirstMove.equals("yes")){
+                    board = computer.computerMakeMove(depth, false, board);
+                    drawBoard(board);
+                } else {
+                    System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
+                    playerMove(false);
+                }
             }
-            board = FenGenerator.interpretFEN(fenString);
         }
     }
 
