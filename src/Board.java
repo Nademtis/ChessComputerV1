@@ -29,17 +29,11 @@ public class Board {
     boolean exit = false;
 
     public void gameLoop() {
-        Scanner in = new Scanner(System.in);
-
         startUp();
-
         //Choosing sides
         boolean isWhiteSide = chooseSide().equals("WHITE");
 
         //Game loop
-        String move;
-        boolean validMove = false;
-
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
             board = computer.computerMakeMoveMeasure(depth, true, board);
@@ -50,23 +44,17 @@ public class Board {
 
             if (isWhiteSide) {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
-
                 playerMove(true);
-
                 drawBoard(board);
-
                 computerMove(false);
 
             } else {
-
                 computerMove(true);
-
                 drawBoard(board);
-
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
-
                 playerMove(false);
+
             }
             System.out.println(FenGenerator.generateFen(board, true, 0, 1));
         } while (!exit);
