@@ -79,10 +79,16 @@ public class Computer{
         long endTime = System.nanoTime();
         double elapsedTime = (double) (endTime - startTime) / 1000000000;
         System.out.println("Calculation finished in " + elapsedTime + " Seconds.");
-
+        MeasureBranchingFactor(depth, nodes);
         //S = B^D Static evaluations = Branching factor ^ Depth
 
         return board;
+    }
+
+    public void MeasureBranchingFactor(int depth, int staticEvaluations){
+        double branchingFactor = Math.pow(staticEvaluations, 1.0/depth);
+        System.out.println("Branching factor: " + branchingFactor);
+
     }
 
     private MinMaxResult iterativeMakeMove(int depth, boolean isWhiteTurn, char[][] board){

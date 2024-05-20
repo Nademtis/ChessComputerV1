@@ -36,7 +36,7 @@ public class Board {
         //Game loop
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
-            board = computer.computerMakeMove(depth, true, board);
+            board = computer.computerMakeMoveMeasure(depth, true, board);
             drawBoard(board);
             System.out.println("-------------------------------------------");
             System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
@@ -132,7 +132,7 @@ public class Board {
     private void computerMove(boolean whitePlay){
         if(whitePlay){
             System.out.println("White/computer is thinking... hold on");
-            board = computer.computerMakeMove(depth, true, board);
+            board = computer.computerMakeMoveMeasure(depth, true, board);
             System.out.println("Computer is done.");
         } else {
             System.out.println("-------------------------------------------");
