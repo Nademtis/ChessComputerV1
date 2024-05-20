@@ -174,6 +174,7 @@ public class Board {
                 }
                 validMove = false;
             }
+            System.out.println(FenGenerator.generateFen(board, isWhiteSide, 0, 1));
         } while (!exit);
     }
 
