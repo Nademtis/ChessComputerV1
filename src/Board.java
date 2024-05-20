@@ -70,6 +70,31 @@ public class Board {
         System.out.println("    a   b   c   d   e   f   g   h");
     }
 
+    public boolean isChessmate(char[][] board) {
+        boolean whiteKingFound = false;
+        boolean blackKingFound = false;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                char piece = board[row][col];
+                if (piece == 'k') {
+                    blackKingFound = true;
+                } else if (piece == 'K') {
+                    whiteKingFound = true;
+                }
+            }
+        }
+
+        if (!whiteKingFound) {
+            System.out.println("Chessmate: White king is dead!");
+            return true;
+        } else if (!blackKingFound) {
+            System.out.println("Chessmate: Black king is dead!");
+            return true;
+        }
+
+        return false;
+    }
 
     public boolean makeMove(String move, boolean isWhiteTurn) {
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
@@ -133,16 +158,27 @@ public class Board {
                 }
                 validMove = false; // Reset validMove flag
                 drawBoard(board);
+                if (isChessmate(board)) {
+                    break;
+                }
                 System.out.println("-------------------------------------------");
                 System.out.println("Black/computer is thinking... hold on");
                 Computer computer = new Computer(board);
                 board = computer.computerMakeMove(6, false);
                 System.out.println("Computer is done.");
+                if (isChessmate(board)) {
+                    drawBoard(board);
+                    break;
+                }
             } else {
                 System.out.println("You chose Black. Computer (White) will make the first move.");
                 Computer computer = new Computer(board);
                 board = computer.computerMakeMove(6, true);
+                System.out.println("Computer is done.");
                 drawBoard(board);
+                if (isChessmate(board)) {
+                    break;
+                }
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
                 move = in.nextLine();
@@ -158,6 +194,10 @@ public class Board {
                     }
                 }
                 validMove = false;
+                if (isChessmate(board)) {
+                    drawBoard(board);
+                    break;
+                }
             }
         } while (!exit);
     }
