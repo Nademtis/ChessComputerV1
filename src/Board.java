@@ -6,11 +6,18 @@ public class Board {
 
     public Board(int depth){
         this.depth = depth;
+        computer.setMaxDepth(depth);
     }
 
     int depth = 4;
 
     Computer computer = new Computer();
+
+    SimpleTimer timer = new SimpleTimer(15, computer);
+
+
+
+    //SimpleTimer timer = new SimpleTimer(15);
 
     char[][] board = {
             {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
@@ -36,7 +43,7 @@ public class Board {
         //Game loop
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
-            board = computer.computerMakeMoveMeasure(depth, true, board);
+            board = computer.computerMakeMove(depth, true, board);
             drawBoard(board);
             System.out.println("-------------------------------------------");
             System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
@@ -108,6 +115,21 @@ public class Board {
         }
     }
 
+    public void computerVSComputerIterativeDeepening(){
+        computer.board = board;
+        System.out.println("Robot vs Robot... start!");
+        while (true){
+            computerMoveIterative(true);
+            drawBoard(board);
+
+            System.out.println("-------------------------------------------");
+
+            computerMoveIterative(false);
+            drawBoard(board);
+
+        }
+    }
+
     private void playerMove(boolean whitePlay){
         Scanner in = new Scanner(System.in);
         String move = in.nextLine();
@@ -132,7 +154,7 @@ public class Board {
     private void computerMove(boolean whitePlay){
         if(whitePlay){
             System.out.println("White/computer is thinking... hold on");
-            board = computer.computerMakeMoveMeasure(depth, true, board);
+            board = computer.computerMakeMove(depth, true, board);
             System.out.println("Computer is done.");
         } else {
             System.out.println("-------------------------------------------");
@@ -140,6 +162,43 @@ public class Board {
             board = computer.computerMakeMove(depth, false, board);
             System.out.println("Computer is done.");
         }
+    }
+
+    private void computerMoveIterative(boolean whitePlay) {
+        if (whitePlay) {
+            System.out.println("White/computer is thinking... hold on");
+        } else {
+            System.out.println("-------------------------------------------");
+            System.out.println("Black/computer is thinking... hold on");
+        }
+
+        // Create a new instance of the computer thread
+        Computer computer = new Computer();
+        computer.setMaxDepth(depth);
+        computer.setIsWhiteTurn(whitePlay);
+        computer.board = board;
+
+        //Create a new instance of the timer
+        SimpleTimer timer = new SimpleTimer(15, computer);
+
+
+        // Start the timer
+        timer.start();
+        // Start the computer thread
+        computer.start();
+        try {
+            // Wait for the computer thread to finish
+            computer.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // Stop the timer
+        timer.stopTimer();
+
+        // Apply the best move from the computer thread to the board
+        board = computer.applyBestMoveSoFar();
+
+        System.out.println("Computer is done.");
     }
 
     private void startUp(){

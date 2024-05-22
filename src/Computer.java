@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Computer{
+public class Computer extends Thread{
 
     public static void main(String[] args) {
         char[][] tempBoard = {
@@ -60,15 +60,45 @@ public class Computer{
         this.board = board;
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
-        //Iterative Deepening
-//        for (int i = 0; i < depth + 1; i++) {
-//            bestResult = iterativeMakeMove(i, isWhiteTurn, board);
-//        }
+
         applyMove(bestResult.getBestMove());
 
 
         return board;
     }
+
+    //region iterative Deepening
+    private volatile boolean interrupted = false;
+    private MinMaxResult bestResultSoFar;
+    private int maxDepth = 10;
+    private boolean isWhiteTurn;
+    @Override
+    public void run(){
+        int depth = 1;
+        while(!interrupted && depth <= maxDepth){
+            bestResultSoFar = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+            depth++;
+            System.out.printf("Depth: %d " + bestResultSoFar + "\n", depth-1);
+        }
+    }
+
+    public char[][] applyBestMoveSoFar(){
+        applyMove(bestResultSoFar.getBestMove());
+        return board;
+    }
+
+    public void setMaxDepth(int maxDepth){
+        this.maxDepth = maxDepth;
+    }
+
+    public int getMaxDepth(){
+        return maxDepth;
+    }
+
+    public void setIsWhiteTurn(boolean isWhiteTurn){
+        this.isWhiteTurn = isWhiteTurn;
+    }
+    //endregion
 
     public char[][] computerMakeMoveMeasure(int depth, boolean isWhiteTurn, char[][] board) {
         this.board = board;
@@ -93,6 +123,7 @@ public class Computer{
     }
 
     private MinMaxResult iterativeMakeMove(int depth, boolean isWhiteTurn, char[][] board){
+        System.out.println("running depth: " + depth);
         return minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
     }
 
