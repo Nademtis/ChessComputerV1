@@ -119,7 +119,7 @@ public class Computer extends Thread{
     private MinMaxResult minimaxIterative(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
         if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null); //TODO maybe not make a new StaticEvaluator every time. Or make method static. Effiecent?
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
 
         try {
@@ -206,7 +206,7 @@ public class Computer extends Thread{
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
          if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null); //TODO maybe not make a new StaticEvaluator every time. Or make method static. Effiecent?
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
 
         //Get possible moves for either white or black
@@ -261,7 +261,7 @@ public class Computer extends Thread{
     /*private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
         if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null); //TODO maybe not make a new StaticEvaluator every time. Or make method static. Effiecent?
+            return new MinMaxResult(StaticEvaluator().evaluate(board), null);
         }
 
 

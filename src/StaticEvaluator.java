@@ -6,7 +6,7 @@ public class StaticEvaluator {
     private static final int QUEEN_VALUE = 900;
     private static final int KING_VALUE = 10000; // vi kan tweak disse værdier for at få bedre results
 
-    public int evaluate(char[][] board) {
+    public static int evaluate(char[][] board) {
         int blackScore = 0;
         int whiteScore = 0;
 
