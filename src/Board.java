@@ -20,6 +20,16 @@ public class Board {
     //SimpleTimer timer = new SimpleTimer(15);
 
     char[][] board = {
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', 'p', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', 'p', ' ', ' ', ' '},
+            {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
+    };
+    /*char[][] board = {
             {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
             {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
             {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -28,7 +38,7 @@ public class Board {
             {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
             {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-    };
+    };*/
 
 
     //En måde på at tjekke om et træk er lovligt
@@ -53,27 +63,27 @@ public class Board {
 
         do {
             drawBoard(board);
-            if(isChessmate(board)){
+            /*if(isChessmate(board)){
                 exit = true;
                 break;
-            }
+            }*/
             if (isWhiteSide) {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
                 playerMove(true);
                 drawBoard(board);
-                if(isChessmate(board)){
+                /*if(isChessmate(board)){
                     exit = true;
                     break;
-                }
+                }*/
                 computerMove(false);
 
             } else {
                 computerMove(true);
                 drawBoard(board);
-                if(isChessmate(board)){
+                /*if(isChessmate(board)){
                     exit = true;
                     break;
-                }
+                }*/
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
                 playerMove(false);

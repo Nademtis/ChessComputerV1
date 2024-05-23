@@ -386,8 +386,8 @@ public class Computer extends Thread{
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col};
-        move.piece = 'Q';
-        move.content = 'P';
+        move.piece = 'P';
+        move.content = 'Q';
         possibleMoves.add(move);
     }
 
@@ -462,7 +462,7 @@ public class Computer extends Thread{
         MoveType move = new MoveType();
         move.oldSpace = new int[]{row, col};
         move.newSpace = new int[]{row, col};
-        move.piece = board[row][col];
+        move.piece = 'p';
         move.content = 'q';
         possibleMoves.add(move);
     }
