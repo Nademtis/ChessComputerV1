@@ -81,7 +81,7 @@ public class StaticEvaluator {
     }
 
     // Piece square tables for white pieces
-    private static final int[][] pawnTableWhite = { //TODO måske row i toppen være højere? - den bliver jo promoted)
+    private static final int[][] pawnTableWhite = {
             {0, 0, 0, 0, 0, 0, 0, 0},
             {50, 50, 50, 50, 50, 50, 50, 50},
             {10, 10, 20, 30, 30, 20, 10, 10},

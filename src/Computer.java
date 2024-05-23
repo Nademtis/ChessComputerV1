@@ -16,8 +16,8 @@ public class Computer extends Thread{
         };
 
         char[][] tempBoard2 = {
-                {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -38,8 +38,10 @@ public class Computer extends Thread{
 
         Board board = new Board(6);
 
-        computer.computerMakeMove(1, true, tempBoard2);
+        computer.computerMakeMove(4, true, tempBoard2);
         board.drawBoard(tempBoard2);
+
+        //computer.start();
     }
 
 
@@ -61,7 +63,12 @@ public class Computer extends Thread{
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
 
-        applyMove(bestResult.getBestMove());
+        if(bestResult.getBestMove().promotion){
+            applyPromotion(bestResult.getBestMove());
+        } else {
+            applyMove(bestResult.getBestMove());
+        }
+
         if(bestResult.getBestMove().piece == 'P' || bestResult.getBestMove().piece == 'p'){
             Board.halfMoveCounter = 0;
         } else {
@@ -75,12 +82,12 @@ public class Computer extends Thread{
     //region iterative Deepening
     private volatile boolean interrupted = false;
     private MinMaxResult bestResultSoFar;
-    private int maxDepth = 10;
+    private int maxDepth = 6;
     private boolean isWhiteTurn;
     @Override
     public void run(){
         int depth = 1;
-        while(!interrupted){
+        while(!interrupted && depth <= maxDepth){
 
                 MinMaxResult tempBestResultSoFar = minimaxIterative(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
 
@@ -104,7 +111,11 @@ public class Computer extends Thread{
     }
 
     public char[][] applyBestMoveSoFar(){
-        applyMove(bestResultSoFar.getBestMove());
+        if(bestResultSoFar.getBestMove().promotion){
+            applyPromotion(bestResultSoFar.getBestMove());
+        } else {
+            applyMove(bestResultSoFar.getBestMove());
+        }
         return board;
     }
 
@@ -139,14 +150,26 @@ public class Computer extends Thread{
             moveList = new ArrayList<>(generateMoveListBlack());
         }
 
+        if(moveList.isEmpty()){
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
+        }
+
         MoveType bestMove = null;
 
         if (maximizingPlayer) { //alpha
             int maxEval = alpha;
             for (MoveType move : moveList) {
-                applyMove(move);
+                if (move.promotion) {
+                    applyPromotion(move);
+                } else {
+                    applyMove(move);
+                }
                 int eval = minimaxIterative(depth - 1, alpha, beta, false).getEvaluation();
-                undoMove(move);
+                if (move.promotion) {
+                    undoPromotion(move);
+                } else {
+                    undoMove(move);
+                }
 
                 if (eval > maxEval) {
                     maxEval = eval;
@@ -161,9 +184,17 @@ public class Computer extends Thread{
         } else { //beta
             int minEval = beta;
             for (MoveType move : moveList) {
-                applyMove(move);
+                if (move.promotion) {
+                    applyPromotion(move);
+                } else {
+                    applyMove(move);
+                }
                 int eval = minimaxIterative(depth - 1, alpha, beta, true).getEvaluation();
-                undoMove(move);
+                if (move.promotion) {
+                    undoPromotion(move);
+                } else {
+                    undoMove(move);
+                }
 
                 if (eval < minEval) {
                     minEval = eval;
@@ -218,15 +249,26 @@ public class Computer extends Thread{
             moveList = new ArrayList<>(generateMoveListBlack());
         }
 
+        if(moveList.isEmpty()){
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
+        }
+
         MoveType bestMove = null;
 
         if (maximizingPlayer) { //alpha
             int maxEval = alpha;
             for (MoveType move : moveList) {
-                applyMove(move);
+                if (move.promotion) {
+                    applyPromotion(move);
+                } else {
+                    applyMove(move);
+                }
                 int eval = minimax(depth - 1, alpha, beta, false).getEvaluation();
-                undoMove(move);
-
+                if (move.promotion) {
+                    undoPromotion(move);
+                } else {
+                    undoMove(move);
+                }
                 if (eval > maxEval) {
                     maxEval = eval;
                     bestMove = move;
@@ -240,9 +282,17 @@ public class Computer extends Thread{
         } else { //beta
             int minEval = beta;
             for (MoveType move : moveList) {
-                applyMove(move);
+                if (move.promotion) {
+                    applyPromotion(move);
+                } else {
+                    applyMove(move);
+                }
                 int eval = minimax(depth - 1, alpha, beta, true).getEvaluation();
-                undoMove(move);
+                if (move.promotion) {
+                    undoPromotion(move);
+                } else {
+                    undoMove(move);
+                }
 
                 if (eval < minEval) {
                     minEval = eval;
@@ -257,69 +307,6 @@ public class Computer extends Thread{
         }
     }
 
-    //Used this version to test the evaluations
-    /*private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
-        nodes++;
-        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(StaticEvaluator().evaluate(board), null);
-        }
-
-
-        //Get possible moves for either white or black
-        ArrayList<MoveType> moveList;
-        if (maximizingPlayer) { //if white
-            moveList = new ArrayList<>(generateMoveListWhite());
-
-        } else { //if black
-            moveList = new ArrayList<>(generateMoveListBlack());
-        }
-
-        MoveType bestMove = null;
-
-        if (maximizingPlayer) { //alpha
-            int maxEval = alpha;
-            for (MoveType move : moveList) {
-                System.out.println("Max Move: " + move);
-                applyMove(move);
-                int eval = minimax(depth - 1, alpha, beta, false).getEvaluation();
-                undoMove(move);
-                System.out.println("Max eval: " + eval);
-                System.out.println("Alpha: " + alpha);
-                if (eval > maxEval) {
-                    maxEval = eval;
-                    bestMove = move;
-                }
-                alpha = Math.max(alpha, eval);
-                if (beta <= alpha) {
-                    break; // beta cutoff
-                }
-            }
-            System.out.println("MaxEval: " + maxEval);
-            System.out.println("BestMove: " + bestMove);
-            return new MinMaxResult(maxEval, bestMove);
-        } else { //beta
-            int minEval = beta;
-            for (MoveType move : moveList) {
-                System.out.println("Min Move: " + move);
-                applyMove(move);
-                int eval = minimax(depth - 1, alpha, beta, true).getEvaluation();
-                undoMove(move);
-                System.out.println("Min eval: " + eval);
-
-                if (eval < minEval) {
-                    minEval = eval;
-                    bestMove = move;
-                }
-                beta = Math.min(beta, eval);
-                if (beta <= alpha) {
-                    break; // alpha cutoff
-                }
-            }
-            System.out.println("MinEval: " + minEval);
-            System.out.println("BestMove: " + bestMove);
-            return new MinMaxResult(minEval, bestMove);
-        }
-    }*/
 
     private ArrayList<MoveType> generateMoveListWhite() {
         possibleMoves = new ArrayList<>();
@@ -338,7 +325,6 @@ public class Computer extends Thread{
         int[] oldSpace = move.oldSpace;
         int[] newSpace = move.newSpace;
         char piece = move.piece;
-        char content = move.content;
 
         // Update the board with the move
         board[newSpace[0]][newSpace[1]] = piece;
@@ -354,6 +340,20 @@ public class Computer extends Thread{
 
         board[oldSpace[0]][oldSpace[1]] = piece;
         board[newSpace[0]][newSpace[1]] = content; //in order to rollback the board in the algorithm
+    }
+
+    //todo if a pawn promotes with a capture, the content is not saved
+    private void applyPromotion(MoveType move){
+        //apply promotion
+        board[move.oldSpace[0]][move.oldSpace[1]] = ' ';
+        board[move.newSpace[0]][move.newSpace[1]] = move.promotionPiece;
+
+    }
+
+    private void undoPromotion(MoveType move){
+        //undo promotion
+        board[move.oldSpace[0]][move.oldSpace[1]] = move.piece;
+        board[move.newSpace[0]][move.newSpace[1]] = ' ';
     }
     //endregion
 
@@ -426,12 +426,32 @@ public class Computer extends Thread{
         }
     }
 
+
+    public char promotionCaseWhite(int num){
+        return switch (num) {
+            case 0 -> 'Q';
+            case 1 -> 'R';
+            case 2 -> 'B';
+            case 3 -> 'N';
+            default -> 'Q';
+        };
+    }
+
+    public char promotionCaseBlack(int num){
+        return switch (num) {
+            case 0 -> 'q';
+            case 1 -> 'r';
+            case 2 -> 'b';
+            case 3 -> 'n';
+            default -> 'q';
+        };
+    }
+
     //region white pawn moves
     public void whitePawnMove(int row, int col) {
         //TODO add en passant
-        //TODO better promotion
         if (row == 0) {
-            whitePawnPromotion(row, col);
+
         } else {
 
             if (row > 0 && board[row - 1][col] == ' ') {
@@ -456,23 +476,29 @@ public class Computer extends Thread{
 
     public void whitePawnPromotion(int row, int col) {
         // white pawn promotion
-        //todo better way to handle promotion
-        MoveType move = new MoveType();
-        move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row, col};
-        move.piece = 'P';
-        move.content = 'Q';
-        possibleMoves.add(move);
+        for (int i = 0; i < 4; i++) {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.promotionPiece = promotionCaseWhite(i);
+            move.promotion = true;
+            possibleMoves.add(move);
+        }
     }
 
     public void whitePawnMoveForwardOne(int row, int col) {
         // white pawn moving 1 space forward
-        MoveType move = new MoveType();
-        move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row - 1, col};
-        move.piece = board[row][col];
-        move.content = board[row - 1][col];
-        possibleMoves.add(move);
+        if(row-1 == 0){
+            whitePawnPromotion(row, col);
+        } else {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row - 1, col};
+            move.piece = board[row][col];
+            move.content = board[row - 1][col];
+            possibleMoves.add(move);
+        }
     }
 
     public void whitePawnMoveForwardTwo(int row, int col) {
@@ -507,7 +533,7 @@ public class Computer extends Thread{
     //region black pawn moves
     public void blackPawnMove(int row, int col) {
         if (row == 7) {
-            blackPawnPromotion(row, col);
+
         } else {
 
             if (row < 7 && board[row + 1][col] == ' ') {
@@ -532,22 +558,28 @@ public class Computer extends Thread{
 
     public void blackPawnPromotion(int row, int col) {
         // black pawn promotion
-        //todo better way to handle promotion
-        MoveType move = new MoveType();
-        move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row, col};
-        move.piece = 'p';
-        move.content = 'q';
-        possibleMoves.add(move);
+        for (int i = 0; i < 4; i++) {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row + 1, col};
+            move.piece = board[row][col];
+            move.promotionPiece = promotionCaseBlack(i);
+            move.promotion = true;
+            possibleMoves.add(move);
+        }
     }
 
     public void blackPawnMoveForwardOne(int row, int col) {
-        MoveType move = new MoveType();
-        move.oldSpace = new int[]{row, col};
-        move.newSpace = new int[]{row + 1, col};
-        move.piece = board[row][col];
-        move.content = board[row + 1][col];
-        possibleMoves.add(move);
+        if(row+1 == 7){
+            blackPawnPromotion(row, col);
+        } else {
+            MoveType move = new MoveType();
+            move.oldSpace = new int[]{row, col};
+            move.newSpace = new int[]{row + 1, col};
+            move.piece = board[row][col];
+            move.content = board[row + 1][col];
+            possibleMoves.add(move);
+        }
     }
 
     public void blackPawnMoveForwardTwo(int row, int col) {
