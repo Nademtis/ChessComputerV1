@@ -15,6 +15,9 @@ public class Board {
 
     SimpleTimer timer = new SimpleTimer(15, computer);
 
+    public static int fullMoveCounter = 1;
+    public static int halfMoveCounter = 0;
+
 
 
     //SimpleTimer timer = new SimpleTimer(15);
@@ -44,12 +47,12 @@ public class Board {
         //Game loop
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
-            board = computer.computerMakeMove(depth, true, board);
+            computerMoveIterative(true);
             drawBoard(board);
             System.out.println("-------------------------------------------");
             System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
             playerMove(false);
-
+            fullMoveCounter++;
         }
 
         do {
@@ -62,6 +65,7 @@ public class Board {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
                 playerMove(true);
                 drawBoard(board);
+                computerMoveIterative(false);
                 /*if(isChessmate(board)){
                     exit = true;
                     break;
@@ -69,7 +73,7 @@ public class Board {
                 computerMove(false);
 
             } else {
-                computerMove(true);
+                computerMoveIterative(true);
                 drawBoard(board);
                 /*if(isChessmate(board)){
                     exit = true;
@@ -80,8 +84,9 @@ public class Board {
                 playerMove(false);
 
             }
+            fullMoveCounter++;
             if(!exit) {
-                System.out.println(FenGenerator.generateFen(board, true, 0, 1));
+                System.out.println(FenGenerator.generateFen(board, true, halfMoveCounter, fullMoveCounter));
             }
         } while (!exit);
     }
@@ -97,11 +102,7 @@ public class Board {
             drawBoard(board);
 
             System.out.println("-------------------------------------------");
-            /*try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+
 
 
             computer = new Computer(board);
@@ -110,20 +111,6 @@ public class Board {
             System.out.println("black computer is done");
             drawBoard(board);
 
-            /*try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
-            //code below is for manually moving black
-            //move = in.nextLine();
-            /*makeMove(move);
-            if(move.equals("exit")){
-                break;
-            }*/
-
-            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
     }
 
@@ -142,6 +129,21 @@ public class Board {
         }
     }
 
+    public void computerIterativeVSComputer(){
+        computer.board = board;
+        System.out.println("Robot vs Robot... start!");
+        while (true){
+            computerMoveIterative(true);
+            drawBoard(board);
+
+            System.out.println("-------------------------------------------");
+
+            computerMove(false);
+            drawBoard(board);
+
+        }
+    }
+
     private void playerMove(boolean whitePlay){
         Scanner in = new Scanner(System.in);
         String move = in.nextLine();
@@ -151,7 +153,7 @@ public class Board {
             System.out.println("Exiting game...");
             exit = true;
         } else if(move.equals("fen")){
-            System.out.println(FenGenerator.generateFen(board, whitePlay, 0, 1));
+            System.out.println(FenGenerator.generateFen(board, whitePlay, halfMoveCounter, fullMoveCounter));
             exit = true;
         } else {
             while(!validMove){
@@ -191,7 +193,7 @@ public class Board {
         computer.board = board;
 
         //Create a new instance of the timer
-        SimpleTimer timer = new SimpleTimer(15, computer);
+        SimpleTimer timer = new SimpleTimer(10, computer);
 
 
         // Start the timer
@@ -261,6 +263,13 @@ public class Board {
         } else {
             board[fromNum][fromChar] = ' ';
             board[toNum][toChar] = piece;
+
+            if(piece=='P' || piece=='p'){
+                halfMoveCounter = 0;
+            } else {
+                halfMoveCounter++;
+            }
+
             return true;
         }
     }

@@ -62,6 +62,11 @@ public class Computer extends Thread{
         System.out.println(bestResult);
 
         applyMove(bestResult.getBestMove());
+        if(bestResult.getBestMove().piece == 'P' || bestResult.getBestMove().piece == 'p'){
+            Board.halfMoveCounter = 0;
+        } else {
+            Board.halfMoveCounter++;
+        }
 
 
         return board;
@@ -75,11 +80,27 @@ public class Computer extends Thread{
     @Override
     public void run(){
         int depth = 1;
-        while(!interrupted && depth <= maxDepth){
-            bestResultSoFar = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
-            depth++;
-            System.out.printf("Depth: %d " + bestResultSoFar + "\n", depth-1);
+        while(!interrupted){
+
+                MinMaxResult tempBestResultSoFar = minimaxIterative(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+
+                if(!interrupted){
+                    bestResultSoFar = tempBestResultSoFar;
+                }
+
+                depth++;
+                System.out.printf("Depth: %d " + bestResultSoFar + "\n", depth - 1);
+                if(Thread.currentThread().isInterrupted()){
+                    System.out.println("Thread interrupted");
+                    break;
+                }
+
         }
+    }
+
+    public void customInterrupt(){
+        interrupted = true;
+        this.interrupted();
     }
 
     public char[][] applyBestMoveSoFar(){
@@ -91,12 +112,70 @@ public class Computer extends Thread{
         this.maxDepth = maxDepth;
     }
 
-    public int getMaxDepth(){
-        return maxDepth;
-    }
-
     public void setIsWhiteTurn(boolean isWhiteTurn){
         this.isWhiteTurn = isWhiteTurn;
+    }
+
+    private MinMaxResult minimaxIterative(int depth, int alpha, int beta, boolean maximizingPlayer) {
+        nodes++;
+        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
+        }
+
+        try {
+            Thread.sleep(0); // Simulate work
+        } catch (InterruptedException e) {
+            customInterrupt();
+            Thread.currentThread().interrupt(); // Preserve interrupt status
+            return bestResultSoFar;// Return the best result so far if interrupted
+        }
+
+        //Get possible moves for either white or black
+        ArrayList<MoveType> moveList;
+        if (maximizingPlayer) { //if white
+            moveList = new ArrayList<>(generateMoveListWhite());
+
+        } else { //if black
+            moveList = new ArrayList<>(generateMoveListBlack());
+        }
+
+        MoveType bestMove = null;
+
+        if (maximizingPlayer) { //alpha
+            int maxEval = alpha;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimaxIterative(depth - 1, alpha, beta, false).getEvaluation();
+                undoMove(move);
+
+                if (eval > maxEval) {
+                    maxEval = eval;
+                    bestMove = move;
+                }
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) {
+                    break; // beta cutoff
+                }
+            }
+            return new MinMaxResult(maxEval, bestMove);
+        } else { //beta
+            int minEval = beta;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimaxIterative(depth - 1, alpha, beta, true).getEvaluation();
+                undoMove(move);
+
+                if (eval < minEval) {
+                    minEval = eval;
+                    bestMove = move;
+                }
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
+            }
+            return new MinMaxResult(minEval, bestMove);
+        }
     }
     //endregion
 
@@ -122,18 +201,13 @@ public class Computer extends Thread{
 
     }
 
-    private MinMaxResult iterativeMakeMove(int depth, boolean isWhiteTurn, char[][] board){
-        System.out.println("running depth: " + depth);
-        return minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
-    }
 
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
          if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null); //TODO maybe not make a new StaticEvaluator every time. Or make method static. Effiecent?
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
-
 
         //Get possible moves for either white or black
         ArrayList<MoveType> moveList;
@@ -187,7 +261,7 @@ public class Computer extends Thread{
     /*private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
         if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null); //TODO maybe not make a new StaticEvaluator every time. Or make method static. Effiecent?
+            return new MinMaxResult(StaticEvaluator().evaluate(board), null);
         }
 
 
