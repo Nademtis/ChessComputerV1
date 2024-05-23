@@ -107,10 +107,6 @@ public class Computer extends Thread{
         this.maxDepth = maxDepth;
     }
 
-    public int getMaxDepth(){
-        return maxDepth;
-    }
-
     public void setIsWhiteTurn(boolean isWhiteTurn){
         this.isWhiteTurn = isWhiteTurn;
     }

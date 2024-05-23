@@ -179,11 +179,6 @@ public class Board {
         }
     }
 
-    public static void main(String[] args) {
-        Board board = new Board(8);
-        board.computerVSComputerIterativeDeepening();
-    }
-
     private void computerMoveIterative(boolean whitePlay) {
         if (whitePlay) {
             System.out.println("White/computer is thinking... hold on");
