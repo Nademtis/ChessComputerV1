@@ -57,28 +57,28 @@ public class Board {
 
         do {
             drawBoard(board);
-            /*if(isChessmate(board)){
+            if(isChessmate(board)){
                 exit = true;
                 break;
-            }*/
+            }
             if (isWhiteSide) {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
                 playerMove(true);
                 drawBoard(board);
                 computerMoveIterative(false);
-                /*if(isChessmate(board)){
+                if(isChessmate(board)){
                     exit = true;
                     break;
-                }*/
+                }
                 computerMove(false);
 
             } else {
                 computerMoveIterative(true);
                 drawBoard(board);
-                /*if(isChessmate(board)){
+                if(isChessmate(board)){
                     exit = true;
                     break;
-                }*/
+                }
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
                 playerMove(false);
@@ -329,91 +329,6 @@ public class Board {
         System.out.println("    a   b   c   d   e   f   g   h");
     }
     //endregion
-
-    public void gameLoopTemp() {
-        System.out.println("Welcome to Chess");
-        Scanner in = new Scanner(System.in);
-
-        //Choosing sides
-        String side;
-        while (true) {
-            System.out.println("Choose your side (White or Black): ");
-            side = in.nextLine().toUpperCase();
-            if (side.equals("WHITE") || side.equals("BLACK")) {
-                break;
-            } else {
-                System.out.println("Invalid choice. Please enter 'White' or 'Black'.");
-            }
-        }
-        boolean isWhiteSide = side.equals("WHITE");
-
-        //Game loop
-        String move;
-        boolean validMove = false;
-        boolean exit = false;
-
-        do {
-            drawBoard(board);
-
-            if (isWhiteSide) {
-                System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
-                move = in.nextLine();
-                if (move.equals("exit")) {
-                    exit = true;
-                    break;
-                }
-                while (!validMove) {
-                    validMove = makeMove(move, true);
-                    if (!validMove) {
-                        System.out.println("Invalid move. Please enter a valid move:");
-                        move = in.nextLine();
-                    }
-                }
-                validMove = false; // Reset validMove flag
-                drawBoard(board);
-                if (isChessmate(board)) {
-                    break;
-                }
-                System.out.println("-------------------------------------------");
-                System.out.println("Black/computer is thinking... hold on");
-                Computer computer = new Computer(board);
-                //board = computer.computerMakeMove(6, false);
-                System.out.println("Computer is done.");
-                if (isChessmate(board)) {
-                    drawBoard(board);
-                    break;
-                }
-            } else {
-                System.out.println("You chose Black. Computer (White) will make the first move.");
-                Computer computer = new Computer(board);
-                //board = computer.computerMakeMove(6, true);
-                System.out.println("Computer is done.");
-                drawBoard(board);
-                if (isChessmate(board)) {
-                    break;
-                }
-                System.out.println("-------------------------------------------");
-                System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
-                move = in.nextLine();
-                if (move.equals("exit")) {
-                    exit = true;
-                    break;
-                }
-                while (!validMove) {
-                    validMove = makeMove(move, false);
-                    if (!validMove) {
-                        System.out.println("Invalid move. Please enter a valid move:");
-                        move = in.nextLine();
-                    }
-                }
-                validMove = false;
-                if (isChessmate(board)) {
-                    drawBoard(board);
-                    break;
-                }
-            }
-        } while (!exit);
-    }
 
 
     public boolean isChessmate(char[][] board) {
