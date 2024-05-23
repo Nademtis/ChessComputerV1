@@ -46,7 +46,7 @@ public class Board {
         //Game loop
         if(!isWhiteSide){
             System.out.println("You chose Black. Computer (White) will make the first move.");
-            board = computer.computerMakeMove(depth, true, board);
+            computerMoveIterative(true);
             drawBoard(board);
             System.out.println("-------------------------------------------");
             System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
@@ -61,10 +61,10 @@ public class Board {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
                 playerMove(true);
                 drawBoard(board);
-                computerMove(false);
+                computerMoveIterative(false);
 
             } else {
-                computerMove(true);
+                computerMoveIterative(true);
                 drawBoard(board);
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
@@ -180,7 +180,7 @@ public class Board {
         computer.board = board;
 
         //Create a new instance of the timer
-        SimpleTimer timer = new SimpleTimer(4, computer);
+        SimpleTimer timer = new SimpleTimer(10, computer);
 
 
         // Start the timer

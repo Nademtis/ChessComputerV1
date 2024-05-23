@@ -80,7 +80,7 @@ public class Computer extends Thread{
     @Override
     public void run(){
         int depth = 1;
-        while(!interrupted && depth <= maxDepth){
+        while(!interrupted){
 
                 MinMaxResult tempBestResultSoFar = minimaxIterative(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
 
