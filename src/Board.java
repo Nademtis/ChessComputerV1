@@ -15,6 +15,9 @@ public class Board {
 
     SimpleTimer timer = new SimpleTimer(15, computer);
 
+    public static int fullMoveCounter = 1;
+    public static int halfMoveCounter = 0;
+
 
 
     //SimpleTimer timer = new SimpleTimer(15);
@@ -48,7 +51,7 @@ public class Board {
             System.out.println("-------------------------------------------");
             System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
             playerMove(false);
-
+            fullMoveCounter++;
         }
 
         do {
@@ -68,8 +71,9 @@ public class Board {
                 playerMove(false);
 
             }
+            fullMoveCounter++;
             if(!exit) {
-                System.out.println(FenGenerator.generateFen(board, true, 0, 1));
+                System.out.println(FenGenerator.generateFen(board, true, halfMoveCounter, fullMoveCounter));
             }
         } while (!exit);
     }
@@ -85,11 +89,7 @@ public class Board {
             drawBoard(board);
 
             System.out.println("-------------------------------------------");
-            /*try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
+
 
 
             computer = new Computer(board);
@@ -98,20 +98,6 @@ public class Board {
             System.out.println("black computer is done");
             drawBoard(board);
 
-            /*try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }*/
-
-            //code below is for manually moving black
-            //move = in.nextLine();
-            /*makeMove(move);
-            if(move.equals("exit")){
-                break;
-            }*/
-
-            //System.out.println("staticEval for Black " + new StaticEvaluator().evaluate(board,false));
         }
     }
 
