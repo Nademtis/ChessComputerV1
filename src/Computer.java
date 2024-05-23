@@ -62,6 +62,11 @@ public class Computer extends Thread{
         System.out.println(bestResult);
 
         applyMove(bestResult.getBestMove());
+        if(bestResult.getBestMove().piece == 'P' || bestResult.getBestMove().piece == 'p'){
+            Board.halfMoveCounter = 0;
+        } else {
+            Board.halfMoveCounter++;
+        }
 
 
         return board;

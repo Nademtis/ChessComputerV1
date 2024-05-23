@@ -140,7 +140,7 @@ public class Board {
             System.out.println("Exiting game...");
             exit = true;
         } else if(move.equals("fen")){
-            System.out.println(FenGenerator.generateFen(board, whitePlay, 0, 1));
+            System.out.println(FenGenerator.generateFen(board, whitePlay, halfMoveCounter, fullMoveCounter));
             exit = true;
         } else {
             while(!validMove){
@@ -249,6 +249,13 @@ public class Board {
         } else {
             board[fromNum][fromChar] = ' ';
             board[toNum][toChar] = piece;
+
+            if(piece=='P' || piece=='p'){
+                halfMoveCounter = 0;
+            } else {
+                halfMoveCounter++;
+            }
+
             return true;
         }
     }
