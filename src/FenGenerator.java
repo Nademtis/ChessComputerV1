@@ -71,9 +71,9 @@ public class FenGenerator {
         fenString.append(" ");
         fenString.append("-"); //todo En passant target
         fenString.append(" ");
-        fenString.append(halvMoveCounter); //todo halvMoveCounter
+        fenString.append(halvMoveCounter);
         fenString.append(" ");
-        fenString.append(fullMoveCounter);  //todo fullMoveCounter
+        fenString.append(fullMoveCounter);
         return fenString.toString();
     }
 
