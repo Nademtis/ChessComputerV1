@@ -130,6 +130,21 @@ public class Board {
         }
     }
 
+    public void computerIterativeVSComputer(){
+        computer.board = board;
+        System.out.println("Robot vs Robot... start!");
+        while (true){
+            computerMoveIterative(true);
+            drawBoard(board);
+
+            System.out.println("-------------------------------------------");
+
+            computerMove(false);
+            drawBoard(board);
+
+        }
+    }
+
     private void playerMove(boolean whitePlay){
         Scanner in = new Scanner(System.in);
         String move = in.nextLine();
@@ -164,6 +179,11 @@ public class Board {
         }
     }
 
+    public static void main(String[] args) {
+        Board board = new Board(8);
+        board.computerVSComputerIterativeDeepening();
+    }
+
     private void computerMoveIterative(boolean whitePlay) {
         if (whitePlay) {
             System.out.println("White/computer is thinking... hold on");
@@ -179,7 +199,7 @@ public class Board {
         computer.board = board;
 
         //Create a new instance of the timer
-        SimpleTimer timer = new SimpleTimer(15, computer);
+        SimpleTimer timer = new SimpleTimer(4, computer);
 
 
         // Start the timer
