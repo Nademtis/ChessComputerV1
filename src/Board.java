@@ -34,6 +34,7 @@ public class Board {
     };
 
 
+
     //En måde på at tjekke om et træk er lovligt
 
     boolean exit = false;
@@ -56,16 +57,27 @@ public class Board {
 
         do {
             drawBoard(board);
-
+            if(isChessmate(board)){
+                exit = true;
+                break;
+            }
             if (isWhiteSide) {
                 System.out.println("White turn. Enter move (pieceCoord, move to Coord) Example: e2, e4");
                 playerMove(true);
                 drawBoard(board);
                 computerMoveIterative(false);
+                if(isChessmate(board)){
+                    exit = true;
+                    break;
+                }
 
             } else {
                 computerMoveIterative(true);
                 drawBoard(board);
+                if(isChessmate(board)){
+                    exit = true;
+                    break;
+                }
                 System.out.println("-------------------------------------------");
                 System.out.println("Black turn. Enter move (pieceCoord, move to Coord) Example: e7, e5");
                 playerMove(false);
@@ -235,6 +247,8 @@ public class Board {
 
     public boolean makeMove(String move, boolean isWhiteTurn) {
         //todo change how a move is made, idea: move = "pawn e4" where you check what piece can move to that position
+        //todo more checks for whether a move is valid
+        try{
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
         int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;
         int toChar = Character.getNumericValue(move.charAt(4)) - 10;
@@ -242,11 +256,49 @@ public class Board {
 
         char piece = board[fromNum][fromChar];
 
+        if(piece == ' '){
+            System.out.println("Invalid move: No piece at that position.");
+            return false;
+        }
+
         if (isWhiteTurn && Character.isLowerCase(piece) ||
                 !isWhiteTurn && Character.isUpperCase(piece)) {
             System.out.println("Invalid move: Cannot move opponent's piece.");
             return false;
         } else {
+            if(piece == 'P'){
+                if(toNum == 0){
+                    System.out.println("Promotion! Enter piece to promote to: (Q, R, B, N)");
+                    Scanner in = new Scanner(System.in);
+                    String promotionPiece = in.nextLine();
+                    if(!promotionPiece.equalsIgnoreCase("Q") && !promotionPiece.equalsIgnoreCase("R") &&
+                            !promotionPiece.equalsIgnoreCase("B") && !promotionPiece.equalsIgnoreCase("N")){
+                        System.out.println("Invalid promotion piece. Please enter a valid piece: (Q, R, B, N)");
+                        return false;
+                    }
+                    board[fromNum][fromChar] = ' ';
+                    String promotion = promotionPiece.toUpperCase();
+                    board[toNum][toChar] = promotion.charAt(0);
+                    return true;
+                }
+            }
+
+            if(piece == 'p'){
+                if(toNum == 7){
+                    System.out.println("Promotion! Enter piece to promote to: (q, r, b, n)");
+                    Scanner in = new Scanner(System.in);
+                    String promotionPiece = in.nextLine();
+                    if(!promotionPiece.equalsIgnoreCase("q") && !promotionPiece.equalsIgnoreCase("r") &&
+                            !promotionPiece.equalsIgnoreCase("b") && !promotionPiece.equalsIgnoreCase("n")){
+                        System.out.println("Invalid promotion piece. Please enter a valid piece: (q, r, b, n)");
+                        return false;
+                    }
+                    board[fromNum][fromChar] = ' ';
+                    String promotion = promotionPiece.toLowerCase();
+                    board[toNum][toChar] = promotion.charAt(0);
+                    return true;
+                }
+            }
             board[fromNum][fromChar] = ' ';
             board[toNum][toChar] = piece;
 
@@ -257,6 +309,9 @@ public class Board {
             }
 
             return true;
+        }
+        } catch (Exception e){
+            return false;
         }
     }
 
@@ -315,5 +370,34 @@ public class Board {
         System.out.println("    a   b   c   d   e   f   g   h");
     }
     //endregion
+
+
+    public boolean isChessmate(char[][] board) {
+        boolean whiteKingFound = false;
+        boolean blackKingFound = false;
+
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                char piece = board[row][col];
+                if (piece == 'k') {
+                    blackKingFound = true;
+                } else if (piece == 'K') {
+                    whiteKingFound = true;
+                }
+            }
+        }
+
+        if (!whiteKingFound) {
+            System.out.println("Chessmate: White king is dead!");
+            return true;
+        } else if (!blackKingFound) {
+            System.out.println("Chessmate: Black king is dead!");
+            return true;
+        }
+
+        return false;
+    }
 }
+
+
 
