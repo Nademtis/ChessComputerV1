@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Computer{
+public class Computer extends Thread{
 
     public static void main(String[] args) {
         char[][] tempBoard = {
@@ -16,7 +16,7 @@ public class Computer{
         };
 
         char[][] tempBoard2 = {
-                {'P', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
+                {' ', 'P', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                 {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -38,6 +38,7 @@ public class Computer{
 
         Board board = new Board(6);
 
+        computer.computerMakeMove(1, true, tempBoard2);
         board.drawBoard(tempBoard2);
     }
 
@@ -59,15 +60,124 @@ public class Computer{
         this.board = board;
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
         System.out.println(bestResult);
-        //Iterative Deepening
-//        for (int i = 0; i < depth + 1; i++) {
-//            bestResult = iterativeMakeMove(i, isWhiteTurn, board);
-//        }
+
         applyMove(bestResult.getBestMove());
+        if(bestResult.getBestMove().piece == 'P' || bestResult.getBestMove().piece == 'p'){
+            Board.halfMoveCounter = 0;
+        } else {
+            Board.halfMoveCounter++;
+        }
 
 
         return board;
     }
+
+    //region iterative Deepening
+    private volatile boolean interrupted = false;
+    private MinMaxResult bestResultSoFar;
+    private int maxDepth = 10;
+    private boolean isWhiteTurn;
+    @Override
+    public void run(){
+        int depth = 1;
+        while(!interrupted){
+
+                MinMaxResult tempBestResultSoFar = minimaxIterative(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+
+                if(!interrupted){
+                    bestResultSoFar = tempBestResultSoFar;
+                }
+
+                depth++;
+                System.out.printf("Depth: %d " + bestResultSoFar + "\n", depth - 1);
+                if(Thread.currentThread().isInterrupted()){
+                    System.out.println("Thread interrupted");
+                    break;
+                }
+
+        }
+    }
+
+    public void customInterrupt(){
+        interrupted = true;
+        this.interrupted();
+    }
+
+    public char[][] applyBestMoveSoFar(){
+        applyMove(bestResultSoFar.getBestMove());
+        return board;
+    }
+
+    public void setMaxDepth(int maxDepth){
+        this.maxDepth = maxDepth;
+    }
+
+    public void setIsWhiteTurn(boolean isWhiteTurn){
+        this.isWhiteTurn = isWhiteTurn;
+    }
+
+    private MinMaxResult minimaxIterative(int depth, int alpha, int beta, boolean maximizingPlayer) {
+        nodes++;
+        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
+        }
+
+        try {
+            Thread.sleep(0); // Simulate work
+        } catch (InterruptedException e) {
+            customInterrupt();
+            Thread.currentThread().interrupt(); // Preserve interrupt status
+            return bestResultSoFar;// Return the best result so far if interrupted
+        }
+
+        //Get possible moves for either white or black
+        ArrayList<MoveType> moveList;
+        if (maximizingPlayer) { //if white
+            moveList = new ArrayList<>(generateMoveListWhite());
+
+        } else { //if black
+            moveList = new ArrayList<>(generateMoveListBlack());
+        }
+
+        MoveType bestMove = null;
+
+        if (maximizingPlayer) { //alpha
+            int maxEval = alpha;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimaxIterative(depth - 1, alpha, beta, false).getEvaluation();
+                undoMove(move);
+
+                if (eval > maxEval) {
+                    maxEval = eval;
+                    bestMove = move;
+                }
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) {
+                    break; // beta cutoff
+                }
+            }
+            return new MinMaxResult(maxEval, bestMove);
+        } else { //beta
+            int minEval = beta;
+            for (MoveType move : moveList) {
+                applyMove(move);
+                int eval = minimaxIterative(depth - 1, alpha, beta, true).getEvaluation();
+                undoMove(move);
+
+                if (eval < minEval) {
+                    minEval = eval;
+                    bestMove = move;
+                }
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
+            }
+            return new MinMaxResult(minEval, bestMove);
+        }
+    }
+    //endregion
 
     public char[][] computerMakeMoveMeasure(int depth, boolean isWhiteTurn, char[][] board) {
         this.board = board;
@@ -79,23 +189,27 @@ public class Computer{
         long endTime = System.nanoTime();
         double elapsedTime = (double) (endTime - startTime) / 1000000000;
         System.out.println("Calculation finished in " + elapsedTime + " Seconds.");
-
+        MeasureBranchingFactor(depth, nodes);
         //S = B^D Static evaluations = Branching factor ^ Depth
 
         return board;
     }
 
-    private MinMaxResult iterativeMakeMove(int depth, boolean isWhiteTurn, char[][] board){
-        return minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
+    public void MeasureBranchingFactor(int depth, int staticEvaluations){
+        double branchingFactor = Math.pow(staticEvaluations, 1.0/depth);
+        System.out.println("Branching factor: " + branchingFactor);
+
     }
+
 
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
-        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
-            return new MinMaxResult(new StaticEvaluator().evaluate(board), null);
+         if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+            return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
 
+        //Get possible moves for either white or black
         ArrayList<MoveType> moveList;
         if (maximizingPlayer) { //if white
             moveList = new ArrayList<>(generateMoveListWhite());
@@ -106,8 +220,8 @@ public class Computer{
 
         MoveType bestMove = null;
 
-        if (maximizingPlayer) {
-            int maxEval = Integer.MIN_VALUE;
+        if (maximizingPlayer) { //alpha
+            int maxEval = alpha;
             for (MoveType move : moveList) {
                 applyMove(move);
                 int eval = minimax(depth - 1, alpha, beta, false).getEvaluation();
@@ -123,8 +237,8 @@ public class Computer{
                 }
             }
             return new MinMaxResult(maxEval, bestMove);
-        } else {
-            int minEval = Integer.MAX_VALUE;
+        } else { //beta
+            int minEval = beta;
             for (MoveType move : moveList) {
                 applyMove(move);
                 int eval = minimax(depth - 1, alpha, beta, true).getEvaluation();
@@ -142,6 +256,70 @@ public class Computer{
             return new MinMaxResult(minEval, bestMove);
         }
     }
+
+    //Used this version to test the evaluations
+    /*private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
+        nodes++;
+        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+            return new MinMaxResult(StaticEvaluator().evaluate(board), null);
+        }
+
+
+        //Get possible moves for either white or black
+        ArrayList<MoveType> moveList;
+        if (maximizingPlayer) { //if white
+            moveList = new ArrayList<>(generateMoveListWhite());
+
+        } else { //if black
+            moveList = new ArrayList<>(generateMoveListBlack());
+        }
+
+        MoveType bestMove = null;
+
+        if (maximizingPlayer) { //alpha
+            int maxEval = alpha;
+            for (MoveType move : moveList) {
+                System.out.println("Max Move: " + move);
+                applyMove(move);
+                int eval = minimax(depth - 1, alpha, beta, false).getEvaluation();
+                undoMove(move);
+                System.out.println("Max eval: " + eval);
+                System.out.println("Alpha: " + alpha);
+                if (eval > maxEval) {
+                    maxEval = eval;
+                    bestMove = move;
+                }
+                alpha = Math.max(alpha, eval);
+                if (beta <= alpha) {
+                    break; // beta cutoff
+                }
+            }
+            System.out.println("MaxEval: " + maxEval);
+            System.out.println("BestMove: " + bestMove);
+            return new MinMaxResult(maxEval, bestMove);
+        } else { //beta
+            int minEval = beta;
+            for (MoveType move : moveList) {
+                System.out.println("Min Move: " + move);
+                applyMove(move);
+                int eval = minimax(depth - 1, alpha, beta, true).getEvaluation();
+                undoMove(move);
+                System.out.println("Min eval: " + eval);
+
+                if (eval < minEval) {
+                    minEval = eval;
+                    bestMove = move;
+                }
+                beta = Math.min(beta, eval);
+                if (beta <= alpha) {
+                    break; // alpha cutoff
+                }
+            }
+            System.out.println("MinEval: " + minEval);
+            System.out.println("BestMove: " + bestMove);
+            return new MinMaxResult(minEval, bestMove);
+        }
+    }*/
 
     private ArrayList<MoveType> generateMoveListWhite() {
         possibleMoves = new ArrayList<>();
@@ -1157,7 +1335,7 @@ public class Computer{
             } else {
                 break;
             }
-            i--;
+            i++;
         }
     }
 
@@ -1182,7 +1360,7 @@ public class Computer{
             } else {
                 break;
             }
-            i++;
+            i--;
         }
     }
 
