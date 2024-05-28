@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="ChessBotGruppe3">
+    <output-path>$PROJECT_DIR$/out/artifacts/ChessBotGruppe3</output-path>
+    <root id="archive" name="ChessBotGruppe3.jar">
+      <element id="module-output" name="ChessComputerV1" />
+    </root>
+  </artifact>
+</component>
