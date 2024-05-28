@@ -87,7 +87,7 @@ public class Board {
             System.out.println("White/computer is thinking... hold on");
             board = computer. computerMakeMoveMeasure(depth, true, board);
             System.out.println("white computer is done");
-            //drawBoard(board);
+            drawBoard(board);
 
             System.out.println("-------------------------------------------");
 
@@ -97,7 +97,7 @@ public class Board {
             System.out.println("Black/computer is thinking... hold on");
             board = computer.computerMakeMoveMeasure(depth, false, board);
             System.out.println("black computer is done");
-            //drawBoard(board);
+            drawBoard(board);
             System.out.println("-------------------------------------------");
 
         }

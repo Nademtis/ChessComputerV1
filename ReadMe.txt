@@ -5,6 +5,8 @@ Guide til at køre programmmet:
 Kør Jar fil:
 Det er muligt at køre programmet ved at køre jar filen.
 Download filen og åben en terminal og skriv: java -jar ChessComputerV1.jar
+På windows skal man bruge powershell.
+På mac og linux skal man bruge terminalen.
 
 Programmet vil nu starte og bede dig om at vælge om du vil starte spillet fra en FEN streng.
 Hvis du vælger at starte fra en FEN streng, vil programmet bede dig om at indtaste en FEN streng.
@@ -28,3 +30,17 @@ En passant vil ikke blive taget i betragtning.
 
 Når der sker en promotion vil du blive bedt om at indtaste hvilken brik du vil promovere til.
 Du skal skrive en af de Char som bliver vist i terminalen.
+
+
+
+Andre gamemodes:
+Det er også muligt at få computeren til at spille mod sig selv.
+Dette kan gøres ved at man åbner src mappen og åbner Main.java filen.
+I main metoden er der to udkommenterede linjer som starter et spil mellem to computere.
+Den ene er computer vs computer med fast dybde.
+Den anden er computer med fast dybde vs computer hvor den tænker på tid.
+
+
+Ekstra ting:
+Som standard er computeren sat til at tænke i 10 sekunder.
+Dette kan ændres ved at ændre i linje 185 i Board.java filen. Hvis man ændrer 10 tallet til noget andet, vil computeren tænke i det antal sekunder.
