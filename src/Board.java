@@ -2,7 +2,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Board {
-    //Fen String generator
 
     public Board(int depth){
         this.depth = depth;
@@ -13,14 +12,8 @@ public class Board {
 
     Computer computer = new Computer();
 
-    SimpleTimer timer = new SimpleTimer(15, computer);
-
     public static int fullMoveCounter = 1;
     public static int halfMoveCounter = 0;
-
-
-
-    //SimpleTimer timer = new SimpleTimer(15);
 
     char[][] board = {
             {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
@@ -32,10 +25,6 @@ public class Board {
             {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
             {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
     };
-
-
-
-    //En måde på at tjekke om et træk er lovligt
 
     boolean exit = false;
 
@@ -98,7 +87,7 @@ public class Board {
             System.out.println("White/computer is thinking... hold on");
             board = computer. computerMakeMoveMeasure(depth, true, board);
             System.out.println("white computer is done");
-            drawBoard(board);
+            //drawBoard(board);
 
             System.out.println("-------------------------------------------");
 
@@ -108,7 +97,8 @@ public class Board {
             System.out.println("Black/computer is thinking... hold on");
             board = computer.computerMakeMoveMeasure(depth, false, board);
             System.out.println("black computer is done");
-            drawBoard(board);
+            //drawBoard(board);
+            System.out.println("-------------------------------------------");
 
         }
     }
@@ -246,8 +236,6 @@ public class Board {
     }
 
     public boolean makeMove(String move, boolean isWhiteTurn) {
-        //todo change how a move is made, idea: move = "pawn e4" where you check what piece can move to that position
-        //todo more checks for whether a move is valid
         try{
         int fromChar = Character.getNumericValue(move.charAt(0)) - 10;
         int fromNum = 9 - Character.getNumericValue(move.charAt(1)) - 1;

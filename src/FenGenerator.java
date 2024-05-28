@@ -30,9 +30,9 @@ public class FenGenerator {
         fenString.append(" ");
         fenString.append(isWhite ? "w" : "b");
         fenString.append(" ");
-        fenString.append("KQkq"); //todo Castling availability
+        fenString.append("KQkq");
         fenString.append(" ");
-        fenString.append("-"); //todo En passant target
+        fenString.append("-");
         fenString.append(" ");
         fenString.append(halvMoveCounter);
         fenString.append(" ");

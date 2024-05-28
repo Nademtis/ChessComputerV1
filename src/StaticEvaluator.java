@@ -4,7 +4,7 @@ public class StaticEvaluator {
     private static final int BISHOP_VALUE = 300;
     private static final int ROOK_VALUE = 500;
     private static final int QUEEN_VALUE = 900;
-    private static final int KING_VALUE = 10000; // vi kan tweak disse værdier for at få bedre results
+    private static final int KING_VALUE = 10000;
 
     public static int evaluate(char[][] board) {
         int blackScore = 0;

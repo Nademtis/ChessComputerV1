@@ -3,48 +3,6 @@ import java.util.Arrays;
 
 public class Computer extends Thread{
 
-    public static void main(String[] args) {
-        char[][] tempBoard = {
-                {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'},
-                {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
-                {'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'}
-        };
-
-        char[][] tempBoard2 = {
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', 'P', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
-                {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '}
-        };
-
-        Computer computer = new Computer(tempBoard2);
-
-        //computer.generateMoves();
-        //System.out.println(computer.possibleMoves);
-        computer.generateMoveListWhite();
-        for (int i = 0; i < computer.possibleMoves.size(); i++) {
-            System.out.println(computer.possibleMoves.get(i));
-        }
-        System.out.println(computer.possibleMoves.size());
-
-        Board board = new Board(6);
-
-        computer.computerMakeMove(4, true, tempBoard2);
-        board.drawBoard(tempBoard2);
-
-        //computer.start();
-    }
-
-
     public Computer(char[][] board) {
         this.board = board;
     }
@@ -129,7 +87,7 @@ public class Computer extends Thread{
 
     private MinMaxResult minimaxIterative(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
-        if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+        if (depth == 0) {
             return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
 
@@ -214,9 +172,9 @@ public class Computer extends Thread{
         this.board = board;
         long startTime = System.nanoTime();
         MinMaxResult bestResult = minimax(depth, Integer.MIN_VALUE, Integer.MAX_VALUE, isWhiteTurn);
-        System.out.println(bestResult);
+        //System.out.println(bestResult);
         applyMove(bestResult.getBestMove());
-        System.out.println("Nodes: " + nodes);
+        //System.out.println("Nodes: " + nodes);
         long endTime = System.nanoTime();
         double elapsedTime = (double) (endTime - startTime) / 1000000000;
         System.out.println("Calculation finished in " + elapsedTime + " Seconds.");
@@ -236,7 +194,7 @@ public class Computer extends Thread{
     //region MinMax algorithm
     private MinMaxResult minimax(int depth, int alpha, int beta, boolean maximizingPlayer) {
         nodes++;
-         if (depth == 0) {// todo: || gameIsOver() - king is confirmed fucked
+         if (depth == 0) {
             return new MinMaxResult(StaticEvaluator.evaluate(board), null);
         }
 
@@ -342,7 +300,6 @@ public class Computer extends Thread{
         board[newSpace[0]][newSpace[1]] = content; //in order to rollback the board in the algorithm
     }
 
-    //todo if a pawn promotes with a capture, the content is not saved
     private void applyPromotion(MoveType move){
         //apply promotion
         board[move.oldSpace[0]][move.oldSpace[1]] = ' ';
@@ -356,13 +313,6 @@ public class Computer extends Thread{
         board[move.newSpace[0]][move.newSpace[1]] = ' ';
     }
     //endregion
-
-    //Generate moves
-
-    //Sort moves
-
-    //Only generate legal moves
-
 
     public void generateMovesForWhite() {
         for (int i = 0; i < board.length; i++) {
@@ -449,7 +399,6 @@ public class Computer extends Thread{
 
     //region white pawn moves
     public void whitePawnMove(int row, int col) {
-        //TODO add en passant
         if (row == 0) {
 
         } else {
